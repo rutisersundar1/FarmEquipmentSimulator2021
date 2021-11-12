@@ -10,16 +10,18 @@
 %s = 73
 %w = 119
 
+keybuffer = keyBuffer(); %Buffer buffered keys with a key buffer.
+
 game_figure = figure('Color', 'blue');
+set(game_figure, 'KeyPressFcn', @bufferKeys);
 
-set(game_figure, 'KeyPressFcn', @keyPressHandler)
 
-function keyPressHandler(source, event)
-   
-    switch event.Key
-        case 97
-            disp("a");
-        case 100
-            disp("d");
-    end
+%Just because I can't pass arguments in through a callback. Sigh.
+function bufferKeys(source, event)
+    bufferKeyInputs(keyBuffer, event);
 end
+
+
+
+
+
