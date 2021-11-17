@@ -23,7 +23,7 @@ delta_x = [0,0]; %change in position each frame, meters
 
 %--------CONSTANTS--------
 throttleInc = 0.1; %per frame
-rotationInc = 5; %degrees per frame
+rotationInc = 50; %degrees per frame
 
 %ROCKET CONSTANTS
 gravity = -9.806; %gravity, meters per second squared
@@ -43,19 +43,19 @@ cowRandMax = 100; %maximum deviation from this average distance, meters
 keybuffer = keyBuffer(); %Buffer buffered keys with a key buffer.
 
 gameFigure = figure('Color', 'blue'); %Initialize the game figure.
-set(gameFigure, 'KeyPressFcn', @bufferKeys); %Assign the key buffer to handle key presses.
+set(gameFigure, 'KeyPressFcn', {@bufferKeys, keybuffer}); %Assign the key buffer to handle key presses.
 
 gameState = "paused"; %game state
 propMass = startingPropMass;
 mass = propMass + dryMass;
 altitude = 0;
-rotation = 270;
+rotation = 0;
 
 %%
 %LOAD ASSETS
 
-rocketImg = imread('assets/rocket.png'); %rocket image
-
+rocketImg = imread('assets/Rocket.png'); %rocket image
+rocketAlpha = imread('assets/RocketAlpha.png'); %rocket alpha because MatLab transparency is horrible.
 %% 
 %RUN GAME
 
@@ -63,6 +63,8 @@ while gameState ~= "crashed"
     frameStart = tic(); %start frame timer
     throttleInput = getThrottleInput(keybuffer);
     rotInput = getRotInput(keybuffer);
+    
+    display(rotInput);
     
     %Handle throttle inputs. z is max. x is cut.
     %w is increase, s is decrease
@@ -90,10 +92,11 @@ while gameState ~= "crashed"
     
     %Handle rotation inputs. Right is d and left is a.
     switch(rotInput)
-        case 1 %d key, rotate right
+        case 2 %d key, rotate right
             rotation = rotation + rotationInc * toc(frameStart);
-        case 2 %a key, rotate left
+        case 1 %a key, rotate left
             rotation = rotation - rotationInc * toc(frameStart);
+            fprintf("rotating left, rotation is now %f deg\n", rotation);
         otherwise
             
     end
@@ -138,13 +141,15 @@ while gameState ~= "crashed"
     %translateBg(Background, -1 * delta_x);
     %scoreCounter(ScoreCounter, altitude, rotation, physicsFrameTime);
     %score = getScore(ScoreCounter);
-    
-    imshow(rocketImg);
+
+    rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'loose');
+    h = imshow(rotatedRocketImg);
+                       
 end
 
 %Just because I can't pass arguments in through a callback. Sigh.
-function bufferKeys(~, event)
-    bufferKeyInputs(keyBuffer, event);
+function bufferKeys(~, event, obj)
+    obj = bufferKeyInputs(obj, event);
 end
 
 

@@ -16,11 +16,12 @@ classdef keyBuffer
         
         %Add key inputs to the buffer. This should be called as a
         %keyPressFcn callback.
-        function obj = bufferKeyInputs(obj, event)
+        function obj = bufferKeyInputs(~, event, obj)
             %Rotation keys
             switch event.Key
                 case 97 %a
                     obj.bufferedRot = 1; %a key
+                    disp("the a key is pressed!");
                 case 100 %d
                     obj.bufferedRot = 2; %d key
                 otherwise
@@ -50,6 +51,7 @@ classdef keyBuffer
         %Return the rotation input keys as a character.
         function rotInput = getRotInput(obj)
             rotInput = obj.bufferedRot;
+            display(obj.bufferedRot);
         end
         
         %Empty the key buffer after its values are used.
