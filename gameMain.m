@@ -30,6 +30,7 @@ gravity = -9.806; %gravity, meters per second squared
 dryMass = 100000; %dry mass, kilograms
 startingPropMass = 300000; %default prop mass, kilograms
 fuelRate = 100; %propellant burned per second at maximum throttle, kilograms per second
+maxThrust = 200000; %maximum thrust, newtons
 
 %COW CONSTANTS
 cowPropMass = 1000; %mass of propellant given by cow, kilograms
@@ -50,25 +51,32 @@ mass = propMass + dryMass;
 altitude = 0;
 rotation = 270;
 
+%%
+%LOAD ASSETS
+
+rocketImg = imread('assets/rocket.png'); %rocket image
+
 %% 
 %RUN GAME
 
 while gameState ~= "crashed"
     frameStart = tic(); %start frame timer
-    throttleinputs = getThrottleInput(keybuffer);
+    throttleInput = getThrottleInput(keybuffer);
     rotInput = getRotInput(keybuffer);
     
     %Handle throttle inputs. z is max. x is cut.
     %w is increase, s is decrease
-    switch(throttleinputs)
-        case "z"
+    switch(throttleInput)
+        case 1 %z key, max throttle
             throttle = 1;
-        case "x" 
+        case 2 %x key, cut throttle
             throttle = 0;
-        case "w" 
+        case 3 %w key, increase throttle
             throttle = throttle + throttleInc * toc(frameStart);
-        case "s"
+        case 4 %s key, reduce throttle
             throttle = throttle - throttleInc * toc(frameStart);
+        otherwise
+            
     end
     
     %Constrain throttle between 0 and 1.
@@ -82,14 +90,18 @@ while gameState ~= "crashed"
     
     %Handle rotation inputs. Right is d and left is a.
     switch(rotInput)
-        case "d"
+        case 1 %d key, rotate right
             rotation = rotation + rotationInc * toc(frameStart);
-        case "a"
+        case 2 %a key, rotate left
             rotation = rotation - rotationInc * toc(frameStart);
+        otherwise
+            
     end
    
+    emptyBuffer(keyBuffer);
+    
     %Constrain rotation between 0 and 360 by adding or subtracting 360.
-    while rotation > 360
+    while rotation >= 360
         rotation = rotation - 360;
     end
     
@@ -126,6 +138,8 @@ while gameState ~= "crashed"
     %translateBg(Background, -1 * delta_x);
     %scoreCounter(ScoreCounter, altitude, rotation, physicsFrameTime);
     %score = getScore(ScoreCounter);
+    
+    imshow(rocketImg);
 end
 
 %Just because I can't pass arguments in through a callback. Sigh.

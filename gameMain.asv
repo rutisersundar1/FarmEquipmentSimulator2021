@@ -1,5 +1,5 @@
 %FARM EQUIPMENT SIMULATOR 2021
-%BUY NOW
+%BUY NOW!
 
 clear
 clc
@@ -15,40 +15,38 @@ throttle = 0; %0 to 1
 mass = 0; %mass, kilograms
 altitude = 0; %meters above sea level
 propMass = 0; %mass of propellant in kilograms
-engine_force = [0,0]; %engine force in newtons
-gravityForce = [0,0]; %force of gravity in newtons
-prop_consumed = 0; %propellant consumed each frame, kilograms
+propConsumed = 0; %propellant consumed each frame, kilograms
 thrust_s = 0; %scalar thrust, newtons
 thrust_v = [0,0]; %vector thrust, newtons
 gravityForce = [0,0]; %force of gravity, newtons
 delta_x = [0,0]; %change in position each frame, meters
 
 %--------CONSTANTS--------
-throttle_inc = 0.1; %per frame
-rotation_inc = 5; %degrees per frame
+throttleInc = 0.1; %per frame
+rotationInc = 5; %degrees per frame
 
 %ROCKET CONSTANTS
 gravity = -9.806; %gravity, meters per second squared
-dry_mass = 100000; %dry mass, kilograms
-starting_prop_mass = 300000; %default prop mass, kilograms
-fuel_rate = 100; %propellant burned per second at maximum throttle, kilograms per second
+dryMass = 100000; %dry mass, kilograms
+startingPropMass = 300000; %default prop mass, kilograms
+fuelRate = 100; %propellant burned per second at maximum throttle, kilograms per second
 
 %COW CONSTANTS
-cow_prop_mass = 1000; %mass of propellant given by cow, kilograms
-cow_avg_dist = 1000; %average distance between cows, meters
-cow_rand_max = 100; %maximum deviation from this average distance, meters
+cowPropMass = 1000; %mass of propellant given by cow, kilograms
+cowAvgDist = 1000; %average distance between cows, meters
+cowRandMax = 100; %maximum deviation from this average distance, meters
 
 %%
 %INITIALIZE GAME
 
 keybuffer = keyBuffer(); %Buffer buffered keys with a key buffer.
 
-game_figure = figure('Color', 'blue'); %Initialize the game figure.
-set(game_figure, 'KeyPressFcn', @bufferKeys); %Assign the key buffer to handle key presses.
+gameFigure = figure('Color', 'blue'); %Initialize the game figure.
+set(gameFigure, 'KeyPressFcn', @bufferKeys); %Assign the key buffer to handle key presses.
 
 gameState = "paused"; %game state
-propMass = starting_prop_mass;
-mass = propMass + dry_mass;
+propMass = startingPropMass;
+mass = propMass + dryMass;
 altitude = 0;
 rotation = 270;
 
@@ -68,21 +66,36 @@ while gameState ~= "crashed"
         case "x" 
             throttle = 0;
         case "w" 
-            throttle = throttle + throttle_inc * toc(frameStart);
+            throttle = throttle + throttleInc * toc(frameStart);
         case "s"
-            throttle = throttle - throttle_inc * toc(frameStart);
+            throttle = throttle - throttleInc * toc(frameStart);
+        otherwise
+            throttle = throttle;
+    end
+    
+    %Constrain throttle between 0 and 1.
+    if throttle > 1
+        throttle = 1;
+    end
+    
+    if throttle < 0
+        throttle = 0;
     end
     
     %Handle rotation inputs. Right is d and left is a.
     switch(rotInput)
         case "d"
-            rotation = rotation + rotation_inc * toc(frameStart);
+            rotation = rotation + rotationInc * toc(frameStart);
         case "a"
-            rotation = rotation - rotation_inc * toc(frameStart);
+            rotation = rotation - rotationInc * toc(frameStart);
+        otherwise
+            rotation = rotation;
     end
    
+    keybuffer = emptyBuffer(keybuffer);
+    
     %Constrain rotation between 0 and 360 by adding or subtracting 360.
-    while rotation > 360
+    while rotation >= 360
         rotation = rotation - 360;
     end
     
@@ -90,37 +103,42 @@ while gameState ~= "crashed"
         rotation = rotation + 360;
     end
     
-    thrust_s = max_thrust * throttle; %scalar thrust value, Newtons
+    thrust_s = maxThrust * throttle; %scalar thrust value, Newtons
     thrust_v = [thrust_s * cosd(rotation), thrust_s * sind(rotation)]; %vector thrust force, Newtons
 
-    physics_frame_time = toc(frameStart); %seconds
+    physicsFrameTime = toc(frameStart); %seconds
     
     %amount of propellant consumed this frame
-    prop_consumed = fuel_rate * throttle * physics_frame_time;
+    propConsumed = fuelRate * throttle * physicsFrameTime;
 
     %subtract consumed propellant and set mass
-    propMass = propMass - prop_consumed; %kg
+    propMass = propMass - propConsumed; %kg
     mass = propMass + dryMass; %kg
     
+    %Calculate forces
     gravityForce = [0, mass * gravity]; %force of gravity, Newtons
     
-    net_force = thrust_v + gravityForce; %net force, Newtons
+    netForce = thrust_v + gravityForce; %net force, Newtons
     
-    acceleration = net_force / mass; %acceleration, meters per second squared
+    %Apply acceleration
+    acceleration = netForce / mass; %acceleration, meters per second squared
     
-    velocity = velocity + acceleration * physics_frame_time; %meters per second
+    velocity = velocity + acceleration * physicsFrameTime; %meters per second
     
-    delta_x = velocity * physics_frame_time; %movement this frame, meters
+    delta_x = velocity * physicsFrameTime; %movement this frame, meters
     altitude = altitude + delta_x(2); %increment altitude as necessary
     
-    %translate_bg(Background, delta_x);
-    %score_counter(ScoreCounter, altitude, rotation);
-    %score = get_score(
+    %Move background and update scoring
+    %translateBg(Background, -1 * delta_x);
+    %scoreCounter(ScoreCounter, altitude, rotation, physicsFrameTime);
+    %score = getScore(ScoreCounter);
+    
+    drawRocket([0,0], 0);
 end
 
 %Just because I can't pass arguments in through a callback. Sigh.
 function bufferKeys(~, event)
-    bufferKeyInputs(keyBuffer, event);
+    bufferKeyInputs(keybuffer, event);
 end
 
 
