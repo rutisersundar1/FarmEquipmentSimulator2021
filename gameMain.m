@@ -25,8 +25,8 @@ frameRate = 60; %frames per second
 frameTime = 1/frameRate; %seconds
 
 %--------CONSTANTS--------
-throttleInc = 0.1; %per frame
-rotationInc = 50; %degrees per frame
+throttleInc = 0.1; %per second
+rotationInc = 180; %degrees per second
 
 %ROCKET CONSTANTS
 gravity = -9.806; %gravity, meters per second squared
@@ -44,7 +44,8 @@ cowRandMax = 100; %maximum deviation from this average distance, meters
 %INITIALIZE GAME
 
 gameFigure = figure('Color', 'blue'); %Initialize the game figure.
-gameFigure.UserData = struct('bufferedRot', 0, 'bufferedThrottle', 0);
+gameFigure.UserData = struct('bufferedRot', 0, 'bufferedThrottle', 0,...
+    'score', 0);
 set(gameFigure, 'KeyPressFcn', @bufferKeys); %Assign the key buffering function
 
 gameState = "paused"; %game state
