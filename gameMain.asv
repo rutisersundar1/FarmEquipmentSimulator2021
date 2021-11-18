@@ -71,20 +71,24 @@ while gameState ~= "crashed"
     
     fprintf("throttleInput: %i, rotInput, %i\n", throttleInput, rotInput);
     
-    %Update throttle and rotation
-    throttle = calcThrottle(throttleInput, throttle, throttleInc, frameTime);
-    rotation = calcRotation(rotInput, rotation, rotationInc, frameTime);
+    bufferedThrottle = 0;
+    bufferedRot = 0;
     
-    %Clear inputs so they aren't used again next frame
-    gameFigure.UserData.bufferedThrottle = 0;
-    gameFigure.UserData.bufferedRot = 0;
+    %Function to handle inputs so that this is cleaner.
+    throtRot = inputHandler(bufferedThrottle, bufferedRot,...
+        throttle, rotation, throttleInc, rotInc, frameStart);
+    throttle = throtRot(1);
+    rotation = throtRot(2);
     
     %Calculate thrust
     thrust_s = maxThrust * throttle; %scalar thrust value, Newtons
     thrust_v = [thrust_s * cosd(rotation), thrust_s * sind(rotation)]; %vector thrust force, Newtons
+
+    %Set a physics frame time
+    physicsFrameTime = toc(frameStart); %seconds
     
     %amount of propellant consumed this frame
-    propConsumed = fuelRate * throttle * frameTime;
+    propConsumed = fuelRate * throttle * physicsFrameTime;
 
     %subtract consumed propellant and set mass
     propMass = propMass - propConsumed; %kg
@@ -98,10 +102,10 @@ while gameState ~= "crashed"
     %Apply acceleration
     acceleration = netForce / mass; %acceleration, meters per second squared
     
-    velocity = velocity + acceleration * frameTime; %meters per second
+    velocity = velocity + acceleration * physicsFrameTime; %meters per second
     velocity = velocity * frictionMultiplier; %rough approximation of air drag
     
-    delta_x = velocity * frameTime; %movement this frame, meters
+    delta_x = velocity * physicsFrameTime; %movement this frame, meters
     altitude = altitude + delta_x(2); %increment altitude as necessary
     
     %Move background and update scoring
@@ -112,8 +116,7 @@ while gameState ~= "crashed"
     rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'loose');
     h = imshow(rotatedRocketImg);
     
-    %Wait so that it continues at the correct framerate
-    if elapsedTime < frameTime
-        pause(frameTime - toc(elapsedTime));
-    end
+    if 
+    pause(frameTime - toc(elapsedTime));
+                       
 end
