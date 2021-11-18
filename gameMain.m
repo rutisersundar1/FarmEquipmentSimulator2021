@@ -26,15 +26,15 @@ frameTime = 1/frameRate; %seconds
 metersToPixels = 2; %meters per pixel
 
 %--------CONSTANTS--------
-throttleInc = 0.1; %per second
+throttleInc = 1; %per second
 rotationInc = 180; %degrees per second
 
 %ROCKET CONSTANTS
 gravity = -9.806; %gravity, meters per second squared
-dryMass = 10000; %dry mass, kilograms
-startingPropMass = 300000; %default prop mass, kilograms
-fuelRate = 100; %propellant burned per second at maximum throttle, kilograms per second
-maxThrust = 20000000; %maximum thrust, newtons
+dryMass = 100000; %dry mass, kilograms
+startingPropMass = 360000; %default prop mass, kilograms
+fuelRate = 5000; %propellant burned per second at maximum throttle, kilograms per second
+maxThrust = 5000000; %maximum thrust, newtons
 
 %COW CONSTANTS
 cowPropMass = 1000; %mass of propellant given by cow, kilograms
@@ -72,12 +72,14 @@ mass = propMass + dryMass;
 altitude = 0;
 rotation = 0;
 
+h = axes('position', [position(1), position(2), 0.4, 0.4]);
 
 %%
 %LOAD ASSETS
 
 rocketImg = imread('assets/Rocket.png'); %rocket image
-rocketAlpha = imread('assets/RocketAlpha.png'); %rocket alpha because MatLab transparency is horrible.
+%rocketAlpha = imread('assets/RocketAlpha.png'); %rocket alpha because MatLab transparency is horrible.
+%rocketAlpha = rocketAlpha(:,:,1);
 
 %% 
 %RUN GAME
@@ -103,15 +105,26 @@ while true
             gameFigure.UserData.bufferedThrottle = 0;
             gameFigure.UserData.bufferedRot = 0;
             
-            %Calculate thrust
-            thrust_s = maxThrust * throttle; %scalar thrust value, Newtons
-            thrust_v = [thrust_s * sind(rotation), thrust_s * cosd(rotation)]; %vector thrust force, Newtons
-            
-            %amount of propellant consumed this frame
-            propConsumed = fuelRate * throttle * frameTime;
-            
-            %subtract consumed propellant and set mass
-            propMass = propMass - propConsumed; %kg
+            if propMass <= 0
+                propmass = 0;
+                propConsumed = 0;
+                thrust_s = 0;
+                thrust_v = [0,0];
+            else
+                %Calculate thrust
+                thrust_s = maxThrust * throttle; %scalar thrust value, Newtons
+                thrust_v = [thrust_s * sind(rotation), thrust_s * cosd(rotation)]; %vector thrust force, Newtons
+                
+                %amount of propellant consumed this frame
+                propConsumed = fuelRate * throttle * frameTime;
+
+                %subtract consumed propellant and set mass
+                propMass = propMass - propConsumed; %kg
+
+                if propMass < 0
+                    propMass = 0;
+                end
+            end
             mass = propMass + dryMass; %kg
             
             %Calculate forces
@@ -130,14 +143,35 @@ while true
                         
             position = position + delta_pos;
             
+            if position(2) < 0
+                position(2) = 0;
+                if velocity(2) < 0
+                    velocity(2) = 0;
+                end
+            end
+            
+            if position(1) < 0
+                position(1) = 0;
+                if velocity(1) < 0
+                    velocity(1) = 0;
+                end
+            end
+            
+            if position(1) > 1
+                position(1) = 1;
+                if velocity(1) > 0
+                    velocity(1) = 0;
+                end
+            end
             %Move background and update scoring
             %translateBg(Background, -1 * delta_x);
-            h = axes('position', [position(1), position(2), 0.4, 0.4]);
-            
-            rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'loose');
+            set(h, 'position', [position(1), position(2), 0.4, 0.4]);
+            rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'crop');
             imshow(rotatedRocketImg);
-            
+       
             axis off
+            
+            text(0, -20, string(propMass));
         else %Something went wrong otherwise.
             delete(gameFigure);
             return
