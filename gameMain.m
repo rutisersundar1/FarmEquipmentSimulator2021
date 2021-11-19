@@ -48,6 +48,9 @@ cowRandMax = 100; %maximum deviation from this average distance, meters
 %1 = running
 %0 = paused
 %-1 = close (by x button)
+game = SpriteKit.Game.instance('Title', 'Farming Simulator 2021', 'Size', [600, 600]);
+bkg = SpriteKit.Background('Assets/background.png');
+
 gameFigure = figure('Color', 'blue'); %Initialize the game figure.
 gameFigure.UserData = struct('bufferedRot', 0, 'bufferedThrottle', 0,...
     'score', 0, 'gameState', 1);
@@ -73,11 +76,16 @@ altitude = 0;
 rotation = 0;
 
 h = axes('position', [position(1), position(2), 0.4, 0.4]);
+set(h, 'Color', 'none');
 
 %%
 %LOAD ASSETS
 
-rocketImg = imread('assets/Rocket.png'); %rocket image
+rocket = SpriteKit.Sprite('State');
+rocket.initState('Standard', 'Assets/Rocket.png', true);
+rocket.Scale = 2;
+rocket.State = 'Standard';
+
 %rocketAlpha = imread('assets/RocketAlpha.png'); %rocket alpha because MatLab transparency is horrible.
 %rocketAlpha = rocketAlpha(:,:,1);
 
@@ -163,15 +171,26 @@ while true
                     velocity(1) = 0;
                 end
             end
-            %Move background and update scoring
-            %translateBg(Background, -1 * delta_x);
-            set(h, 'position', [position(1), position(2), 0.4, 0.4]);
-            rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'crop');
-            imshow(rotatedRocketImg);
-       
-            axis off
             
-            text(0, -20, string(propMass));
+            %Move background and update scoring
+            
+            if delta_pos(1) <= 0
+                bkg.scroll('right', -delta_pos(1) * metersToPixels);
+            else
+                bkg.scroll('left', delta_pos(1) * metersToPixels);
+            end
+            
+            rocket.Location = position;
+
+%             set(h, 'position', [position(1), position(2), 0.4, 0.4]);
+%             rotatedRocketImg = imrotate(rocketImg, -rotation, 'nearest', 'loose');
+%             rotatedRocketAlpha = imrotate(rocketAlpha, -rotation, 'nearest', 'loose');
+%             %rotatedRocketImg(rotatedRocketImg == 0) = 255;
+%             image(rotatedRocketImg, 'AlphaData', rotatedRocketAlpha);
+       
+%            axis off
+            
+%            text(0, -20, string(propMass));
         else %Something went wrong otherwise.
             delete(gameFigure);
             return
