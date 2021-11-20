@@ -18,7 +18,7 @@ iter = 1;
 G.play(@action);
 
 function action
-    bkg.scroll('right',1);
+    bkg.scroll('right
     s.Location = s.Location + [1,1];
     s.Angle = s.Angle + 1;
     disp(iter);

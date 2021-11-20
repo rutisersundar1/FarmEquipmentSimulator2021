@@ -13,10 +13,7 @@ backgroundScale = 1.0;
 rocketImg = 'Assets/Rocket.png';
 rocketScale = 1.0;
 
-windowSize = [1920 1080];
-pixelsPerMeter = 100;
-
-%ROCKET CONSTANTS
+windowSize = [1920 1080];%ROCKET CONSTANTS
 
 gravity = -9.806; %gravity, meters per second squared
 dryMass = 100000; %dry mass, kilograms
@@ -27,10 +24,10 @@ frameTime = 1 / 60;
 
 %STARTING CONSTANTS
 startingPropMass = 360000; %default prop mass, kilograms
-startingPosition = windowSize/2; %default position, m
-startingVelocity = [40,30]; %default velocity, m/s
+startingPosition = wind; %default position, m
+startingVelocity = [0,0]; %default velocity, m/s
 startingAltitude = 0; %default altitude, meters
-startingThrottle = 1; %default throttle, 0 to 1
+startingThrottle = 0; %default throttle, 0 to 1
 acceleration = [0,0];
 
 %COW CONSTANTS
@@ -158,16 +155,16 @@ function action
     
     %Scroll the background horizontally. It requires a positive value, so we do this.
     if delta_pos(1) < 0
-        bkg.scroll('right', abs(delta_pos(1) * pixelsPerMeter));
+        bkg.scroll('left', abs(delta_pos(1)));
     elseif delta_pos(1) > 0
-        bkg.scroll('left', abs(delta_pos(1) * pixelsPerMeter));
+        bkg.scroll('right', abs(delta_pos(1)));
     end
     
     %Scroll the background vertically. It requires a positive value, so we do this.
     if delta_pos(2) < 0
-        bkg.scroll('down', abs(delta_pos(2) * pixelsPerMeter));
+        bkg.scroll('down', abs(delta_pos(2)));
     elseif delta_pos(2) > 0
-        bkg.scroll('up', abs(delta_pos(2) * pixelsPerMeter));
+        bkg.scroll('up', abs(delta_pos(2)));
     end
             
 end
