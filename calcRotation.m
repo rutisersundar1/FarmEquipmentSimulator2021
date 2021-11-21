@@ -7,7 +7,7 @@ function rotationOut = calcRotation(rotInput, rotation, rotationInc, frameTime)
             rotationVal = rotation - rotationInc * frameTime;
         case 1 %a key, rotate left
             rotationVal = rotation + rotationInc * frameTime;
-            fprintf("rotating left, rotation is now %f deg\n", rotation);
+            %fprintf("rotating left, rotation is now %f deg\n", rotation);
         otherwise
             rotationVal = rotation;
 
