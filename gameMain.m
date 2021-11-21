@@ -50,7 +50,7 @@ rotationInc = 180; %degrees per second
 
 %Initialize Game object
 G = SpriteKit.Game.instance('Title', 'Farm Equipment Simulator 2021', 'Size', windowSize);
-G.onKeyPress = @bufferKeys;
+
 
 %Initialize Background object
 bkg = SpriteKit.Background(backgroundImg);
@@ -95,6 +95,9 @@ rocket.rotBuffer = 0;
 
 %%
 %Run game
+
+%Set up the key buffering system
+G.onKeyPress = {@bufferKeys, rocket};
 
 G.play(@action); %Run game
 
@@ -152,7 +155,7 @@ function action
     %Rough approximation of friction
     rocket.velocity = rocket.velocity * frictionMultiplier; %m/s
     
-    delta_pos = -1 * rocket.velocity * frameTime; %change in position this frame, meters
+    delta_pos = rocket.velocity * frameTime; %change in position this frame, meters
     
     rocket.altitude = rocket.altitude + delta_pos(2); %increment altitude
     
@@ -165,9 +168,9 @@ function action
     
     %Scroll the background vertically. It requires a positive value, so we do this.
     if delta_pos(2) < 0
-        bkg.scroll('down', abs(delta_pos(2) * pixelsPerMeter));
-    elseif delta_pos(2) > 0
         bkg.scroll('up', abs(delta_pos(2) * pixelsPerMeter));
+    elseif delta_pos(2) > 0
+        bkg.scroll('down', abs(delta_pos(2) * pixelsPerMeter));
     end
             
 end

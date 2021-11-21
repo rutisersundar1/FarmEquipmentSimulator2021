@@ -4,9 +4,9 @@ function rotationOut = calcRotation(rotInput, rotation, rotationInc, frameTime)
     %Handle rotation inputs. Right is d and left is a.
     switch(rotInput)
         case 2 %d key, rotate right
-            rotationVal = rotation + rotationInc * frameTime;
-        case 1 %a key, rotate left
             rotationVal = rotation - rotationInc * frameTime;
+        case 1 %a key, rotate left
+            rotationVal = rotation + rotationInc * frameTime;
             fprintf("rotating left, rotation is now %f deg\n", rotation);
         otherwise
             rotationVal = rotation;
