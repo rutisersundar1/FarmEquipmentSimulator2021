@@ -41,7 +41,8 @@ particleLifeSpan = [60,120]; %particle life span min/max in frames
 %}
 
 %STARTING CONSTANTS
-startingPropMass = 360000; %default prop mass, kilograms
+%startingPropMass = 360000; %default prop mass, kilograms
+startingPropMass = 100000;
 startingPosition = windowSize/2; %default position, m
 startingVelocity = [40,30]; %default velocity, m/s
 startingAltitude = 0; %default altitude, meters
@@ -57,7 +58,7 @@ propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
 
 cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
 cowSpawnY = 400; %distance from bottom of the screen the cow should spawn, pixels
-
+cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
 %CONTROL CONSTANTS
 throttleInc = 1; %per second
 rotationInc = 180; %degrees per second
@@ -189,7 +190,7 @@ function action
     
     %Update the rocket's total mass.
     rocket.mass = rocket.propMass + rocket.dryMass; %kg
-    
+    %disp(rocket.mass);
     %Calculate the forces acting on the rocket
     gravityForce = [0, rocket.mass * gravity]; %force of gravity, Newtons
     
@@ -219,11 +220,14 @@ function action
     elseif delta_pos(2) > 0
         bkg.scroll('down', abs(delta_pos(2) * pixelsPerMeter));
     end
+    
+    %fprintf("delta_pos %i, %i\n", delta_pos(1), delta_pos(2));
             
     %COW HANDLING
     
     %Scroll the cow
     cow.Location = cow.Location + [1, -1] .* delta_pos * pixelsPerMeter;
+    %fprintf("cow location %i, %i", cow.Location(1), cow.Location(2));
     
     %Add the x-movement to the cow's counter
     cow.xToNextCow = cow.xToNextCow - abs(delta_pos(1));
@@ -231,7 +235,7 @@ function action
     %If the rocket has travelled far enough since the last cow, spawn a new
     %one
     
-    if cow.xToNextCow <= 0
+    if (cow.xToNextCow <= 0) && (cow.State == "off")
         cow.State = 'on';
         
         %If the rocket is moving to the right, spawn on the right side
@@ -249,19 +253,37 @@ function action
     %Secret mechanic, don't tell anyone! If the rocket's propellant gets
     %quite low, spawn a new cow regardless of cow timer :)
     if rocket.propMass <= propCowPity * rocket.maxPropMass 
-        cow.State = 'on';
-        
-        %If the rocket is moving to the right, spawn on the right side
-        if rocket.velocity >= 0
-            %Spawn on the right side of the screen
-            cow.Location = [windowSize(1) - cowSpawnMargin, cowSpawnY];
-        else %If it's moving to the left, spawn on the left side
-            %Spawn on the left side of the screen
-            cow.Location = [cowSpawnMargin, cowSpawnY];
+        if cow.State == "off"
+            cow.State = 'on';
+
+            %If the rocket is moving to the right, spawn on the right side
+            if rocket.velocity >= 0
+                %Spawn on the right side of the screen
+                cow.Location = [windowSize(1) - cowSpawnMargin, cowSpawnY];
+            else %If it's moving to the left, spawn on the left side
+                %Spawn on the left side of the screen
+                cow.Location = [cowSpawnMargin, cowSpawnY];
+            end
+
+            cow.xToNextCow = randi(cowRandVals); %reset cow-nter
         end
-        
-        cow.xToNextCow = randi(cowRandVals); %reset cow-nter
     end
+    
+    %{ 
+    %sike this wasn't the thing causing the bug
+    %Check that the cow is not way off screen
+    %It's possible that the cow goes through the collision sprites around
+    %the screen otherwise. Maybe.
+    if cow.Location(1) < -cowKillMargin
+        cow.State = 'off';
+    elseif cow.Location(1) > windowSize(1) + cowKillMargin
+        cow.State = 'off';
+    elseif cow.Location(2) > windowSize(2) + cowKillMargin
+        cow.State = 'off';
+    elseif cow.Location(2) < -cowKillMargin
+        cow.State = 'off';
+    end
+    %}
     
     %Check the cow's collisions
     [collide, target] = SpriteKit.Physics.hasCollision(cow);
@@ -281,7 +303,7 @@ function action
             case 'rocket'
                 %Only give propellant if the cow is enabled (otherwise,
                 %it's a 1x1 transparent png and its position is irrelevant
-                if cow.State == 'on'
+                if cow.State == "on"
                     %Give the rocket more propellant
                     rocket.propMass = rocket.propMass + cow.propAmt;
                     
