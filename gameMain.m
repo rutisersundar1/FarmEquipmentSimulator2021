@@ -7,10 +7,12 @@ clc
 
 %% Define Constants
 %DEFINE IMAGE PATHS AND DISPLAY CONSTANTS
+%pro tip: don't change these scale values! It causes the game to run at
+%around 10 fps. Just scale the image. It's terrible.
 backgroundImg = 'Assets/background.png';
-backgroundScale = 1.0;
+backgroundScale = 1;
 rocketImg = 'Assets/Rocket.png';
-rocketScale = 1.0;
+rocketScale = 1;
 
 %{
 exhaustParticleLightImg = 'Assets/ExhaustParticle.png';
@@ -21,8 +23,31 @@ cowImg = 'Assets/cow.png'; %Cow png
 cowScale = 1.0;
 noneImg = 'Assets/noneImg.png'; %1x1 transparent png
 
-windowSize = [1920 1080];
-pixelsPerMeter = 100;
+windowSize = [1280 720];
+pixelsPerMeter = 100/1920 * windowSize(1);
+
+%This is my fix for the memory leak. The user is wrong.
+if windowSize(1) > 1280 || windowSize(2) > 720
+    disp("Higher resolutions than 1280x720 are not recommended as they cause a memory leak. I have no clue why and I am not going to try and fix this because I don't have time.");
+end
+
+%FUEL GAUGE CONSTANTS
+
+%width of fuel gauge in px
+fuelGaugeWidth = (100 / 1920 * windowSize(1));
+%Fuel gauge height when full
+fuelGaugeMaxHeight = windowSize(2) / 2;
+%Fuel gauge offset from bottom-left corner of screen
+fuelGaugeOffset = [(50/1080 * windowSize(2)) , windowSize(2) / 5];
+
+%The x coordinate of the label for the fuel gauge
+fuelTextX = fuelGaugeOffset(1) + fuelGaugeWidth/5;
+%The y coordinate of the label for the fuel gauge
+fuelTextY = fuelGaugeMaxHeight + fuelGaugeOffset(2) + windowSize(2) / 40;
+
+fuelGaugeFillColor = [1, .5, 0];
+fuelGaugeEdgeColor = [0, 0, 0];
+fuelGaugeLineWidth = 3;
 
 %ROCKET CONSTANTS
 
@@ -32,7 +57,7 @@ fuelRate = 5000; %propellant burned per second at maximum throttle, kilograms pe
 maxThrust = 5000000; %maximum thrust, newtons
 maxPropMass = 360000; %maximum propellant mass, kilograms
 frictionMultiplier = 0.98; %velocity is multiplied by this each frame to approximate friction
-frameTime = 1 / 60;
+frameTime = 1 / 60; 
 
 %PARTICLE CONSTANTS
 %{
@@ -41,10 +66,10 @@ particleLifeSpan = [60,120]; %particle life span min/max in frames
 %}
 
 %STARTING CONSTANTS
-%startingPropMass = 360000; %default prop mass, kilograms
-startingPropMass = 100000;
+startingPropMass = 360000; %default prop mass, kilograms
+%startingPropMass = 10000; %testing low fuel behavior
 startingPosition = windowSize/2; %default position, m
-startingVelocity = [40,30]; %default velocity, m/s
+startingVelocity = [0,0]; %default velocity, m/s
 startingAltitude = 0; %default altitude, meters
 startingThrottle = 1; %default throttle, 0 to 1
 acceleration = [0,0];
@@ -59,12 +84,21 @@ propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
 cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
 cowSpawnY = 400; %distance from bottom of the screen the cow should spawn, pixels
 cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
+
 %CONTROL CONSTANTS
 throttleInc = 1; %per second
 rotationInc = 180; %degrees per second
 
-
-
+%THINGS TO INITIALIZE IN THE HOPES THAT IT FIXES THE MEMORY LEAK
+thrust_s = 0;
+thrust_v = [0,0];
+acceleration = [0,0];
+gravityForce = [0,0];
+netForce = [0,0];
+propConsumed = 0;
+delta_pos = 0;
+collide = false;
+target = 'rocket';
 
 %% Initialize Game with SpriteKit
 %Initialize Game object
@@ -117,6 +151,7 @@ rocket.throttleBuffer = 0;
 rocket.rotBuffer = 0;
 
 %% Exhaust particle sprite
+%haha with these memory issues? nah
 %{
 %Create particle Sprite object
 particle = SpriteKit.Sprite('particle');
@@ -143,10 +178,32 @@ cow.Scale = cowScale;
 
 cow.propAmt = cowPropMass; %Amount of propellant in the cow
 cow.xToNextCow = randi(cowRandVals); %meters since last cow collected
+
 %% Run Game
 
 %Set up the key buffering system
 G.onKeyPress = {@bufferKeys, rocket};
+
+%Draw fuel gauge rectangles
+%Outline rectangle that shows the maximum size
+fuelGaugeRect = rectangle('Position', [fuelGaugeOffset, fuelGaugeWidth, fuelGaugeMaxHeight]);
+
+fuelGaugeHeight = fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
+
+%Fill rectangle that shows how much propellant you have
+fuelFillRect = rectangle('Position', [fuelGaugeOffset, fuelGaugeWidth, fuelGaugeHeight]);
+
+%Set colors
+fuelFillRect.FaceColor = fuelGaugeFillColor;
+fuelFillRect.EdgeColor = fuelGaugeEdgeColor;
+fuelFillRect.LineWidth = fuelGaugeLineWidth;
+
+fuelGaugeRect.EdgeColor = fuelGaugeEdgeColor;
+fuelGaugeRect.LineWidth = fuelGaugeLineWidth;
+
+%Draw the label for the fuel gauge
+fuelText = text(fuelTextX, fuelTextY, "Fuel");
+fuelText.FontSize = 14;
 
 G.play(@action); %Run game
 
@@ -168,9 +225,11 @@ function action
     %and subtract propellant.
     if rocket.propMass <= 0
         rocket.propMass = 0;
-        propConsumed = 0;
-        thrust_s = 0;
-        thrust_v = [0,0];
+        
+        %propConsumed = 0; %not necessary
+        %thrust_s = 0; %not necessary
+        
+        thrust_v = [0,0];   
     else
         %Calculate thrust
         thrust_s = rocket.maxThrust * rocket.throttle; %scalar thrust value, Newtons
@@ -186,6 +245,15 @@ function action
         if rocket.propMass < 0
             rocket.propMass = 0;
         end
+        
+        %This was originally in a separate if statement, but for some
+        %reason that completely destroyed performance at low fuel levels. I
+        %have no clue why. FPS dropped to 8 to 20 from 30, but putting it
+        %here fixes that. 
+        
+        %draw fuel gauge
+        fuelGaugeHeight = fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
+        fuelFillRect.Position(4) = fuelGaugeHeight;
     end
     
     %Update the rocket's total mass.
@@ -206,6 +274,9 @@ function action
     delta_pos = rocket.velocity * frameTime; %change in position this frame, meters
     
     rocket.altitude = rocket.altitude + delta_pos(2); %increment altitude
+    
+    %Test to see if drawing a rectangle over a game works
+    %rectangle('Position', [10 20 30 40]);
     
     %Scroll the background horizontally. It requires a positive value, so we do this.
     if delta_pos(1) < 0
@@ -234,7 +305,8 @@ function action
     
     %If the rocket has travelled far enough since the last cow, spawn a new
     %one
-    
+    %Not the memory leak culprit
+
     if (cow.xToNextCow <= 0) && (cow.State == "off")
         cow.State = 'on';
         
@@ -250,6 +322,7 @@ function action
         cow.xToNextCow = randi(cowRandVals); %reset cow-nter
     end
     
+    %This kills performance for some reason, so we're ditching that
     %Secret mechanic, don't tell anyone! If the rocket's propellant gets
     %quite low, spawn a new cow regardless of cow timer :)
     if rocket.propMass <= propCowPity * rocket.maxPropMass 
@@ -268,9 +341,7 @@ function action
             cow.xToNextCow = randi(cowRandVals); %reset cow-nter
         end
     end
-    
-    %{ 
-    %sike this wasn't the thing causing the bug
+
     %Check that the cow is not way off screen
     %It's possible that the cow goes through the collision sprites around
     %the screen otherwise. Maybe.
@@ -283,9 +354,10 @@ function action
     elseif cow.Location(2) < -cowKillMargin
         cow.State = 'off';
     end
-    %}
+    
     
     %Check the cow's collisions
+    %Not the memory leak culprit...
     [collide, target] = SpriteKit.Physics.hasCollision(cow);
     if collide
         switch target.ID
@@ -318,6 +390,7 @@ function action
                 end
         end
     end
+    
     
 end
 end
