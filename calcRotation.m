@@ -1,16 +1,15 @@
 %Handles rotation inputs and constrains rotation between zero and 360
 %degrees.
-function rotationOut = calcRotation(rotInput, rotation, rotationInc, frameTime)
+function calcRotation(rocket)
     %Handle rotation inputs. Right is d and left is a.
-    switch(rotInput)
+    switch(rocket.rotBuffer)
         case 2 %d key, rotate right
-            rotationVal = rotation - rotationInc * frameTime;
+            rotationVal = rocket.Angle - Const.rotationInc * Const.frameTime;
         case 1 %a key, rotate left
-            rotationVal = rotation + rotationInc * frameTime;
+            rotationVal = rocket.Angle + Const.rotationInc * Const.frameTime;
             %fprintf("rotating left, rotation is now %f deg\n", rotation);
         otherwise
-            rotationVal = rotation;
-
+            rotationVal = rocket.Angle;
     end
 
     %Constrain rotation between 0 and 360 by adding or subtracting 360.
@@ -23,5 +22,6 @@ function rotationOut = calcRotation(rotInput, rotation, rotationInc, frameTime)
     end
 
     %Assign the working value to the output.
-    rotationOut = rotationVal;
+    rocket.Angle = rotationVal;
+    rocket.rotBuffer = 0; %clear rotation buffer
 end

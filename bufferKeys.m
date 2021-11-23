@@ -18,5 +18,13 @@ function bufferKeys(~, event, rocket)
                 case 115 %s
                     rocket.throttleBuffer = 4; %s key
             end
-
+            
+            switch event.Key
+                case 'escape'
+                    rocket.specialBuffer = 1; %pause
+                case 'space'
+                    rocket.specialBuffer = 2; %space to start game
+                case 'q'
+                    rocket.specialBuffer = 3; %quit game in pause menu
+            end
 end
