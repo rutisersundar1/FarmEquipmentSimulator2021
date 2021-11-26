@@ -13,6 +13,9 @@ classdef Const
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
         
+        titleScreenImg = 'Assets/titleScreen.png'; %Title screen
+        pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
+        
         windowSize = [1280 720]; %Window size, pixels.
         
         pixelsPerMeter = Const.windowSize(1) * 100/1920;

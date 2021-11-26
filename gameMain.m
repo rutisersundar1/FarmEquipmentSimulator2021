@@ -15,14 +15,22 @@ G = SpriteKit.Game.instance('Title', 'Farm Equipment Simulator 2021', 'Size', Co
 bkg = SpriteKit.Background(Const.backgroundImg);
 bkg.Scale = Const.backgroundScale;
 
-%If the fuel gauge exists
-fuelGaugeExists = 0;
-
-
 %% Create Sprites
+%Rocket and cow (gameplay sprites)
 rocket = createRocket(Const);
 cow = createCow(Const);
 
+rocket.Depth = 0; %In the middle
+cow.Depth = -1; %Behind the rocket
+
+%Title/pause screen sprite
+titleSprite = SpriteKit.Sprite('title');
+
+titleSprite.initState('titleScreen', Const.titleScreenImg, true);
+titleSprite.initState('pauseScreen', Const.pauseScreenImg, true);
+titleSprite.initState('hide', Const.noneImg, true);
+
+titleSprite.Depth = 100; %Make sure this is always on top
 %% Run Game
 %Create fuel gauge
 %Outline rectangle that shows the maximum size
@@ -53,11 +61,7 @@ fuelText.FontSize = 14;
 %Set up the key buffering system
 G.onKeyPress = {@bufferKeys, rocket};
 
-%Show the title text if in the title game state.
-if rocket.gameState == "title"
-    titleText = text(Const.windowSize(1)/2, Const.windowSize(2)/2,...
-    "Farm Equipment Simulator 2021");
-end
+titleSprite.State = 'hide';
 
 G.play(@action); %Run game
 
@@ -73,8 +77,7 @@ function action
             %% Title Screen
             rocket.State = 'hide'; %hide the rocket
             cow.State = 'off'; %hide the cow
-            
-            titleText.Visible = 'on'; %Show title text
+            titleSprite.State = 'titleScreen'; %show title screen
             
             %Hide fuel gauge
             fuelGaugeRect.Visible = 'off';
@@ -105,6 +108,7 @@ function action
             
         case 'pause' %When paused
             %% Pause Screen
+            titleSprite.State = 'pauseScreen';
             %Check for resuming or quitting the game.
             switch rocket.specialBuffer
                 case 1 %esc key, resume game
@@ -118,8 +122,8 @@ function action
             
         case 'play' %In gameplay
             
-            %Hide title text
-            titleText.Visible = 'off';
+            %Hide title/pause screen
+            titleSprite.State = 'hide';
 
             %Make fuel gauge visible
             fuelGaugeRect.Visible = 'on';
