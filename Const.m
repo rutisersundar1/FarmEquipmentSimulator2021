@@ -48,6 +48,7 @@ classdef Const
         startingVelocity = [0,0]; %default velocity, m/s
         startingAltitude = 0; %default altitude, meters
         startingThrottle = 1; %default throttle, 0 to 1
+        startingGameState = "title"; %title screen
         
         %% COW CONSTANTS
         cowPropMass = 1000; %mass of propellant given by cow, kilograms

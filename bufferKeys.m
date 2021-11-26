@@ -1,21 +1,21 @@
 function bufferKeys(~, event, rocket)
             %Rotation keys
             switch event.Key
-                case 97 %a
+                case 'a' %a
                     rocket.rotBuffer = 1; %a key
-                case 100 %d
+                case 'd' %d
                     rocket.rotBuffer = 2; %d key
             end
             
             %Throttle keys
             switch event.Key
-                case 122 %z
+                case 'z' %z
                     rocket.throttleBuffer = 1; %z key
-                case 120 %x
+                case 'x' %x
                     rocket.throttleBuffer = 2; %x key
-                case 119 %w
+                case 'w' %w
                     rocket.throttleBuffer = 3; %w key
-                case 115 %s
+                case 's' %s
                     rocket.throttleBuffer = 4; %s key
             end
             
