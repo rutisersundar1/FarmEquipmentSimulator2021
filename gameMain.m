@@ -58,6 +58,19 @@ fuelGaugeRect.LineWidth = Const.fuelGaugeLineWidth;
 fuelText = text(Const.fuelTextX, Const.fuelTextY, "Fuel");
 fuelText.FontSize = 14;
 
+%Create throttle gauge
+throtGaugeRect = rectangle('Position', Const.throtGaugeRectPos);
+throtGaugeRect.EdgeColor = Const.throtGaugeEdgeColor;
+throtGaugeRect.LineWidth = Const.throtGaugeLineWidth;
+
+%Create throttle gauge fill rectangle
+throtFillRect = rectangle('Position', Const.throtGaugeRectPos);
+throtFillRect.Position(3) = rocket.throttle * Const.throtGaugeWidth;
+throtFillRect.EdgeColor = Const.throtGaugeEdgeColor;
+throtFillRect.LineWidth = Const.throtGaugeLineWidth;
+
+altitudeText = text(Const.altTextX, Const.altTextY, "");
+altitudeText.FontSize = 16;
 %Set up the key buffering system
 G.onKeyPress = {@bufferKeys, rocket};
 
@@ -83,6 +96,10 @@ function action
             fuelGaugeRect.Visible = 'off';
             fuelFillRect.Visible = 'off';
             fuelText.Visible = 'off';
+            
+            throtGaugeRect.Visible = 'off';
+            throtFillRect.Visible = 'off';
+            %aaaaaathrotText.Visible = 'off';
             
             %Take special buffer key inputs
             switch rocket.specialBuffer
@@ -174,7 +191,11 @@ function action
                 %draw fuel gauge
                 fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
                 fuelFillRect.Position(4) = fuelGaugeHeight;
+                
+                
             end
+            %Update altitude text
+            altitudeText.set('String', sprintf("altitude: %.0f m", rocket.altitude));
             
             %Update the rocket's total mass.
             rocket.mass = rocket.propMass + rocket.dryMass; %kg
@@ -210,8 +231,7 @@ function action
                 bkg.scroll('down', abs(delta_pos(2) * Const.pixelsPerMeter));
             end
             
-            %% Cow Handling
-            
+            %% Cow Handling            
             %Scroll the cow
             cow.Location = cow.Location + [1, -1] .* delta_pos * Const.pixelsPerMeter;
             %fprintf("cow location %i, %i", cow.Location(1), cow.Location(2));
@@ -232,10 +252,11 @@ function action
                 cow.State = 'off';
             elseif cow.Location(1) > Const.windowSize(1) + Const.cowKillMargin
                 cow.State = 'off';
+            %Removed kill for above and below screen
             elseif cow.Location(2) > Const.windowSize(2) + Const.cowKillMargin
-                cow.State = 'off';
+                %cow.State = 'off';
             elseif cow.Location(2) < -Const.cowKillMargin
-                cow.State = 'off';
+                %cow.State = 'off';
             end
             
             %Check the cow's collisions

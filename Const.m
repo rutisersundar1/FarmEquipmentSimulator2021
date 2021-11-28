@@ -24,7 +24,7 @@ classdef Const
         
         fuelGaugeWidth = Const.windowSize(1) * 100/1920
         fuelGaugeMaxHeight = Const.windowSize(2) / 2;
-        fuelGaugeOffset = [ 50/1808 * Const.windowSize(2), Const.windowSize(2) / 5];
+        fuelGaugeOffset = [ 50/1820 * Const.windowSize(2), Const.windowSize(2) / 5];
         
         %X and Y coordinates of the fuel gauge's text label
         fuelTextX = Const.fuelGaugeOffset(1) + Const.fuelGaugeWidth/5;
@@ -34,6 +34,29 @@ classdef Const
         fuelGaugeFillColor = [1, .5, 0];
         fuelGaugeEdgeColor = [0, 0, 0];
         fuelGaugeLineWidth = 3;
+        
+        altTextX = Const.windowSize(1)/2 - 60 %altitude text x coord
+        altTextY = Const.windowSize(2) - 40; %altitude text y coord
+        
+        %Throttle gauge constants
+        %How far off the bottom of the screen the throttle gauge is
+        throtGaugeOffsetY = Const.windowSize(2) / 10;
+        throtGaugeHeight = Const.windowSize(1) * 100/1920;
+        %How wide the throttle gauge is
+        throtGaugeWidth = Const.windowSize(1) / 2;
+        %Left side of the throttle gauge
+        throtGaugeLeftX = Const.windowSize(1)/2 - Const.throtGaugeWidth/2;
+        %Right side of the throttle gauge
+        throtGaugeRightX = Const.windowSize(1)/2 + Const.throtGaugeWidth/2;
+        
+        %Throttle gauge Position vector
+        throtGaugeRectPos = [Const.throtGaugeLeftX, Const.throtGaugeOffsetY,...
+            Const.throtGaugeWidth, Const.throtGaugeHeight];
+        
+        %Colors of the throttle gauge
+        throtGaugeFillColor = [1, 0, 0];
+        throtGaugeEdgeColor = [0, 0, 0];
+        throtGaugeLineWidth = 3;
         
         %% ROCKET CONSTANTS
         gravity = -9.806; %gravity, meters per second squared
@@ -58,7 +81,7 @@ classdef Const
         cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
-        cowSpawnY = 400; %distance from bottom of the screen the cow should spawn, pixels
+        cowSpawnAlt = 400; %Altitude over the ground to spawn the cow, pixels
         cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
         
         %% CONTROL CONSTANTS
