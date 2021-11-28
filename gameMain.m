@@ -31,7 +31,8 @@ titleSprite.initState('pauseScreen', Const.pauseScreenImg, true);
 titleSprite.initState('hide', Const.noneImg, true);
 
 titleSprite.Depth = 100; %Make sure this is always on top
-%% Run Game
+
+%% Create non-SpriteKit UI elements
 %Create fuel gauge
 %Outline rectangle that shows the maximum size
 fuelGaugeRect = rectangle('Position',...
@@ -67,10 +68,18 @@ throtGaugeRect.LineWidth = Const.throtGaugeLineWidth;
 throtFillRect = rectangle('Position', Const.throtGaugeRectPos);
 throtFillRect.Position(3) = rocket.throttle * Const.throtGaugeWidth;
 throtFillRect.EdgeColor = Const.throtGaugeEdgeColor;
+throtFillRect.FaceColor = Const.throtGaugeFillColor;
 throtFillRect.LineWidth = Const.throtGaugeLineWidth;
 
+%Throttle gauge label text
+throtText = text(Const.throtTextX, Const.throtTextY, "Throttle");
+throtText.FontSize = 16;
+
+%Altitude text, initialized to blank.
 altitudeText = text(Const.altTextX, Const.altTextY, "");
 altitudeText.FontSize = 16;
+
+%% Run Game
 %Set up the key buffering system
 G.onKeyPress = {@bufferKeys, rocket};
 
@@ -99,7 +108,9 @@ function action
             
             throtGaugeRect.Visible = 'off';
             throtFillRect.Visible = 'off';
-            %aaaaaathrotText.Visible = 'off';
+            throtText.Visible = 'off';
+            
+            altitudeText.Visible = 'off';
             
             %Take special buffer key inputs
             switch rocket.specialBuffer
@@ -147,6 +158,13 @@ function action
             fuelFillRect.Visible = 'on';
             fuelText.Visible = 'on';
             
+            %Make throttle gauge visible
+            throtGaugeRect.Visible = 'on';
+            throtFillRect.Visible = 'on';
+            throtText.Visible = 'on';
+            
+            altitudeText.Visible = 'on'; %altimeter text
+            
             %% Rocket Physics
             rocket.State = 'rocket1'; %Show the rocket
             
@@ -191,11 +209,14 @@ function action
                 %draw fuel gauge
                 fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
                 fuelFillRect.Position(4) = fuelGaugeHeight;
-                
-                
             end
+            
             %Update altitude text
-            altitudeText.set('String', sprintf("altitude: %.0f m", rocket.altitude));
+            altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
+            
+            %Update throttle gauge
+            throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
+            throtFillRect.Position(3) = throtFillWidth;
             
             %Update the rocket's total mass.
             rocket.mass = rocket.propMass + rocket.dryMass; %kg

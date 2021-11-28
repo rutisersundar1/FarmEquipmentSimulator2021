@@ -18,13 +18,15 @@ classdef Const
         
         windowSize = [1280 720]; %Window size, pixels.
         
-        pixelsPerMeter = Const.windowSize(1) * 100/1920;
+        %This controls how fast things appear to move (how far a sprite is
+        %moved when its position changes by one meter)
+        pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
         %% FUEL GAUGE CONSTANTS
         
-        fuelGaugeWidth = Const.windowSize(1) * 100/1920
+        fuelGaugeWidth = Const.windowSize(1) * 50/1280
         fuelGaugeMaxHeight = Const.windowSize(2) / 2;
-        fuelGaugeOffset = [ 50/1820 * Const.windowSize(2), Const.windowSize(2) / 5];
+        fuelGaugeOffset = [ 50/1280 * Const.windowSize(2), Const.windowSize(2) / 5];
         
         %X and Y coordinates of the fuel gauge's text label
         fuelTextX = Const.fuelGaugeOffset(1) + Const.fuelGaugeWidth/5;
@@ -40,8 +42,8 @@ classdef Const
         
         %Throttle gauge constants
         %How far off the bottom of the screen the throttle gauge is
-        throtGaugeOffsetY = Const.windowSize(2) / 10;
-        throtGaugeHeight = Const.windowSize(1) * 100/1920;
+        throtGaugeOffsetY = Const.windowSize(2) / 30;
+        throtGaugeHeight = Const.windowSize(2) * 20/720;
         %How wide the throttle gauge is
         throtGaugeWidth = Const.windowSize(1) / 2;
         %Left side of the throttle gauge
@@ -57,6 +59,10 @@ classdef Const
         throtGaugeFillColor = [1, 0, 0];
         throtGaugeEdgeColor = [0, 0, 0];
         throtGaugeLineWidth = 3;
+        
+        throtTextMargin = Const.windowSize(2) * 10/720
+        throtTextX = Const.throtGaugeRightX + Const.throtTextMargin;
+        throtTextY = Const.throtGaugeOffsetY + Const.throtGaugeHeight / 2;
         
         %% ROCKET CONSTANTS
         gravity = -9.806; %gravity, meters per second squared
