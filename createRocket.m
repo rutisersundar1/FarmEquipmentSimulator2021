@@ -4,9 +4,14 @@ function rocket = createRocket(Const)
     rocket = SpriteKit.Sprite('rocket');
 
     %Set up the default state for the rocket and give it its image
-    rocket.initState('rocket1', Const.rocketImg, true);
     rocket.initState('hide', Const.noneImg, true); %hide rocket if needed
     rocket.initState('crash', Const.crashedRocketImg, true); %exploded rocket
+    
+    %Different throttle states
+    rocket.initState('thrust0', Const.rocketImg, true); %Cut throttle
+    rocket.initState('thrust1', Const.rocketThrust1Img, true); %Low throttle 
+    rocket.initState('thrust2', Const.rocketThrust2Img, true); %Mid throttle
+    rocket.initState('thrust3', Const.rocketThrust3Img, true); %High throttle
     
     %Give the rocket its necessary properties. These are per rocket in case
     %multiplayer is wanted in the future or in case multiple rocket models
@@ -30,7 +35,7 @@ function rocket = createRocket(Const)
     %Initialize rocket physics and give it its values
     rocket.Location = Const.startingPosition;
     rocket.velocity = Const.startingVelocity;
-    rocket.State = 'rocket1';
+    rocket.State = 'thrust0';
     rocket.Scale = Const.rocketScale;
     rocket.altitude = Const.startingAltitude;
     rocket.propMass = Const.startingPropMass;
@@ -42,6 +47,7 @@ function rocket = createRocket(Const)
     rocket.maxPropMass = Const.maxPropMass;
     rocket.gameState = Const.startingGameState;
     rocket.zeroAltLocPx = rocket.Location(2) - rocket.altitude * Const.pixelsPerMeter; 
+    rocket.score = 0;
 
     %These need to be initialized to 0 (empty)
     rocket.throttleBuffer = 0;

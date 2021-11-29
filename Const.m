@@ -23,6 +23,11 @@ classdef Const
         
         crashedRocketImg = 'Assets/rocket3_crashed.png'; %Crashed version of the rocket
         
+        %Low/mid/high thrust images (with flames)
+        rocketThrust1Img = 'Assets/rocket3_low.png';
+        rocketThrust2Img = 'Assets/rocket3_mid.png';
+        rocketThrust3Img = 'Assets/rocket3_high.png';
+        
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
@@ -58,7 +63,7 @@ classdef Const
         altTextX = Const.windowSize(1)/2 - 60 %altitude text x coord
         altTextY = Const.windowSize(2) - 40; %altitude text y coord
         
-        scoreTextX = Const.windowSize(1) - 100; %Score text x coord
+        scoreTextX = Const.windowSize(1) - 300; %Score text x coord
         scoreTextY = Const.windowSize(2) - 40; %Score text y coord
         
         %Throttle gauge constants
@@ -94,7 +99,14 @@ classdef Const
         frictionMultiplier = 0.98; %velocity is multiplied by this each frame to approximate friction
         frameTime = 1 / 60; %seconds
         
+        %Throttle cutoffs: Below these values, the rocket will appear to
+        %have a different size of flame.
+        throttle2cutoff = 0.8; %Mid throttle
+        throttle1cutoff = 0.5; %Low throttle
+        throttle0cutoff = 0.1; %Zero throttle
+        
         %% STARTING CONSTANTS
+        startingAngle = 0; %default angle, degrees
         startingPropMass = 360000; %default prop mass, kilograms
         %startingPropMass = 10000; %testing low fuel behavior
         startingPosition = Const.windowSize/2; %default position, m
@@ -102,6 +114,7 @@ classdef Const
         startingAltitude = 5; %default altitude, meters
         startingThrottle = 1; %default throttle, 0 to 1
         startingGameState = "title"; %title screen
+        restartGameState = "title"; %game state if restarting
         
         %% COW CONSTANTS
         cowPropMass = 1000; %mass of propellant given by cow, kilograms
@@ -114,8 +127,8 @@ classdef Const
         
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
-        angleMultiplier = 1; %Multiplier for angle scoring
-        altitudeMultiplier = 1; %Multiplier for altitude scoring
+        angleMultiplier = 10; %Multiplier for angle scoring
+        altitudeMultiplier = 10; %Multiplier for altitude scoring
         
         %% CONTROL CONSTANTS
         throttleInc = 1; %per second
