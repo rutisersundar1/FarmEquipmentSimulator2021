@@ -6,7 +6,7 @@ function rocket = createRocket(Const)
     %Set up the default state for the rocket and give it its image
     rocket.initState('rocket1', Const.rocketImg, true);
     rocket.initState('hide', Const.noneImg, true); %hide rocket if needed
-    %rocket.initState('crash', Const.crashImg, true); %exploded rocket
+    rocket.initState('crash', Const.crashedRocketImg, true); %exploded rocket
     
     %Give the rocket its necessary properties. These are per rocket in case
     %multiplayer is wanted in the future or in case multiple rocket models

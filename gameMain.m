@@ -350,7 +350,7 @@ function action
         scoreText.Visible = 'on'; %Show score text
         
         %Crash rocket and hide cow
-        %rocket.State = 'crash';
+        rocket.State = 'crash';
         cow.State = 'off';
         
         titleSprite.State = 'crashScreen'; %Show crash screen
