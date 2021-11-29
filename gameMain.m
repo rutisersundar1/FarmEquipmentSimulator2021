@@ -20,8 +20,8 @@ bkg.Scale = Const.backgroundScale;
 rocket = createRocket(Const);
 cow = createCow(Const);
 
-rocket.Depth = 0; %In the middle
-cow.Depth = -1; %Behind the rocket
+rocket.Depth = 10; %In the middle
+cow.Depth = 0; %Behind the rocket
 
 %Title/pause screen sprite
 titleSprite = SpriteKit.Sprite('title');
@@ -78,6 +78,9 @@ throtText.FontSize = 16;
 %Altitude text, initialized to blank.
 altitudeText = text(Const.altTextX, Const.altTextY, "");
 altitudeText.FontSize = 16;
+
+%Debug text for debugging
+debugText = text(Const.debugTextX, Const.debugTextY, "");
 
 %% Run Game
 %Set up the key buffering system
@@ -173,6 +176,17 @@ function action
                 rocket.gameState = 'pause';
                 rocket.specialBuffer = 0;
             end
+            
+            %Debug key handling
+            if rocket.specialBuffer == 99
+                %Forcibly spawn a cow to test spawning behavior
+                if Const.debugForceSpawnCow
+                    cow.State = 'off'; %turn the cow off so it can be respawned
+                    spawnCow(rocket, cow);
+                end
+            end
+            
+            rocket.specialBuffer = 0;
             
             %Read key inputs from the buffer and update throttle and rotation.
             %calcThrottle and calcRotation handle constraining the throttle and
@@ -275,9 +289,9 @@ function action
                 cow.State = 'off';
             %Removed kill for above and below screen
             elseif cow.Location(2) > Const.windowSize(2) + Const.cowKillMargin
-                %cow.State = 'off';
+                cow.State = 'off';
             elseif cow.Location(2) < -Const.cowKillMargin
-                %cow.State = 'off';
+                cow.State = 'off';
             end
             
             %Check the cow's collisions
@@ -307,5 +321,21 @@ function action
     case 'crash' %Rocket crashed/game over
         
     end 
+    
+    debugString = "";
+    
+    if Const.debugShowRocketPos
+       debugString = sprintf("Rocket Position %.0f, %.0f \n ", rocket.Location(1), rocket.Location(2));
+    end
+    
+    if Const.debugShowGameState
+        debugString = debugString + "Game State " + rocket.gameState + " \n";
+    end
+    
+    if Const.debugShowCowPos
+        debugString = debugString + sprintf("Cow Position %.0f, %.0f \n", cow.Location(1), cow.Location(2));
+    end
+    
+    debugText.String = debugString;
 end
 end

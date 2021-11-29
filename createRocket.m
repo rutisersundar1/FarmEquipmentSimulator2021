@@ -23,6 +23,7 @@ function rocket = createRocket(Const)
     addprop(rocket, 'maxPropMass'); %maximum prop mass, kg
     addprop(rocket, 'specialBuffer'); %key buffer for pause, etc. keys
     addprop(rocket, 'gameState'); %game state: "play" "pause" "crash" "title"
+    addprop(rocket, 'zeroAltLocPx'); %zero altitude location in pixels
     
     %Initialize rocket physics and give it its values
     rocket.Location = Const.startingPosition;
@@ -38,6 +39,7 @@ function rocket = createRocket(Const)
     rocket.throttle = Const.startingThrottle;
     rocket.maxPropMass = Const.maxPropMass;
     rocket.gameState = Const.startingGameState;
+    rocket.zeroAltLocPx = rocket.Location(2) - rocket.altitude * Const.pixelsPerMeter; 
 
     %These need to be initialized to 0 (empty)
     rocket.throttleBuffer = 0;

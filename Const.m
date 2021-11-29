@@ -1,6 +1,17 @@
 %Stores constant values that need to be accessed from many locations.
 classdef Const
     properties (Constant)
+        %% DEBUG
+        %For making stuff make sense.
+        debugTextX = 100;
+        debugTextY = 100;
+        
+        debugShowRocketPos = 1; %shows rocket position
+        debugShowCowPos = 1; %show cow position
+        debugShowGameState = 1; %show game state
+        
+        debugForceSpawnCow = 1; %Debug key forces a cow to spawn
+        
         %% DISPLAY CONSTANTS
         %Scale values should not be changed from 1, as it has a significant
         %performance impact.
@@ -87,8 +98,9 @@ classdef Const
         cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
-        cowSpawnAlt = 400; %Altitude over the ground to spawn the cow, pixels
+        cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
+        cowSpawnY = 0; %spawn y in pixels for old spawn behavior
         
         %% CONTROL CONSTANTS
         throttleInc = 1; %per second

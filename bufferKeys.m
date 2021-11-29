@@ -26,5 +26,7 @@ function bufferKeys(~, event, rocket)
                     rocket.specialBuffer = 2; %space to start game
                 case 'q'
                     rocket.specialBuffer = 3; %quit game in pause menu
+                case 'c'
+                    rocket.specialBuffer = 99; %debug
             end
 end
