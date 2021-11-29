@@ -17,7 +17,7 @@ classdef Const
         %performance impact.
         backgroundImg = 'Assets/background.png'; %Path to the background image
         backgroundScale = 1; %Do not change scale values.
-        rocketImg = 'Assets/Rocket.png'; %Path to the rocket image
+        rocketImg = 'Assets/rocket3.png'; %Path to the rocket image
         rocketScale = 1; %Do not change scale values.
         
         cowImg = 'Assets/cow.png'; %Path to the cow image
@@ -34,6 +34,9 @@ classdef Const
         %moved when its position changes by one meter)
         pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
+        zeroAlt = 20; %pixels
+        
+        backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
         %% FUEL GAUGE CONSTANTS
         
         fuelGaugeWidth = Const.windowSize(1) * 50/1280
@@ -90,7 +93,7 @@ classdef Const
         %startingPropMass = 10000; %testing low fuel behavior
         startingPosition = Const.windowSize/2; %default position, m
         startingVelocity = [0,0]; %default velocity, m/s
-        startingAltitude = 0; %default altitude, meters
+        startingAltitude = 5; %default altitude, meters
         startingThrottle = 1; %default throttle, 0 to 1
         startingGameState = "title"; %title screen
         

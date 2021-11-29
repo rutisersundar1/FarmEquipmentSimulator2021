@@ -3,12 +3,12 @@ function spawnCow(rocket, cow)
         cow.State = 'on';
         
         %Rocket altitude over the ground in pixels
-        rocket_alt_px = rocket.altitude * Const.pixelsPerMeter;
+        %rocket_alt_px = rocket.altitude * Const.pixelsPerMeter;
         %Pizel location of the zero altitude
-        zero_alt_px = rocket.Location(2) - rocket_alt_px;
+        %zero_alt_px = rocket.Location(2) - rocket_alt_px;
         %Cow initial y, pixels
-        cow_init_y = zero_alt_px + (Const.cowSpawnAlt * Const.pixelsPerMeter);        
-        
+        %cow_init_y = zero_alt_px + (Const.cowSpawnAlt * Const.pixelsPerMeter);        
+        cow_init_y = Const.zeroAlt + Const.cowSpawnAlt * Const.pixelsPerMeter;
         %If the rocket is moving to the right, spawn on the right side
         if rocket.velocity(1) <= 0
             %Spawn on the right side of the screen

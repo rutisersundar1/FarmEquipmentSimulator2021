@@ -253,6 +253,7 @@ function action
             
             rocket.altitude = rocket.altitude + delta_pos(2); %increment altitude
             
+            rocket.Location(2) = rocket.altitude * Const.pixelsPerMeter + Const.zeroAlt;
             %% Background
             %Scroll the background horizontally. It requires a positive value, so we do this.
             if delta_pos(1) < 0
@@ -261,16 +262,17 @@ function action
                 bkg.scroll('left', abs(delta_pos(1) * Const.pixelsPerMeter));
             end
             
-            %Scroll the background vertically. It requires a positive value, so we do this.
-            if delta_pos(2) < 0
-                bkg.scroll('up', abs(delta_pos(2) * Const.pixelsPerMeter));
-            elseif delta_pos(2) > 0
-                bkg.scroll('down', abs(delta_pos(2) * Const.pixelsPerMeter));
+            if Const.backgroundVerticalScroll
+                %Scroll the background vertically. It requires a positive value, so we do this.
+                if delta_pos(2) < 0
+                    bkg.scroll('up', abs(delta_pos(2) * Const.pixelsPerMeter));
+                elseif delta_pos(2) > 0
+                    bkg.scroll('down', abs(delta_pos(2) * Const.pixelsPerMeter));
+                end
             end
-            
             %% Cow Handling            
             %Scroll the cow
-            cow.Location = cow.Location + [1, -1] .* delta_pos * Const.pixelsPerMeter;
+            cow.Location = cow.Location + [1, 0] .* delta_pos * Const.pixelsPerMeter;
             %fprintf("cow location %i, %i", cow.Location(1), cow.Location(2));
             
             %Add the x-movement to the cow's counter
