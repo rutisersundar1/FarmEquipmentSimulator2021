@@ -177,7 +177,7 @@ function action
             scoreText.Visible = 'on'; %Score text
             
             %% Rocket Physics
-            rocket.State = 'rocket1'; %Show the rocket
+            rocket.State = 'thrust0'; %Show the rocket
             
             %Check for pausing the game.
             if rocket.specialBuffer == 1
@@ -232,20 +232,8 @@ function action
                 %have no clue why. FPS dropped to 8 to 20 from 30, but putting it
                 %here fixes that.
                 
-                %draw fuel gauge
-                fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
-                fuelFillRect.Position(4) = fuelGaugeHeight;
+
             end
-            
-            %Update altitude text
-            altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
-            
-            %Update game score display
-            scoreText.String = sprintf("Score: %.0f", rocket.score);
-            
-            %Update throttle gauge
-            throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
-            throtFillRect.Position(3) = throtFillWidth;
             
             %Update the rocket's total mass.
             rocket.mass = rocket.propMass + rocket.dryMass; %kg
@@ -267,6 +255,35 @@ function action
             rocket.altitude = rocket.altitude + delta_pos(2); %increment altitude
             
             rocket.Location(2) = rocket.altitude * Const.pixelsPerMeter + Const.zeroAlt;
+            
+            %% Scoring and Display
+            %Show the rocket throttle states: If the rocket throttle is
+            %between certain values, it shows a different size flame.
+            if rocket.throttle <= Const.throttle0cutoff
+                rocket.State = 'thrust0';
+            elseif rocket.throttle <= Const.throttle1cutoff
+                rocket.State = 'thrust1';
+            elseif rocket.throttle <= Const.throttle2cutoff
+                rocket.State = 'thrust2';
+            else 
+                rocket.State = 'thrust3';
+            end
+                
+            %Update altitude text
+            altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
+
+            %Update game score display
+            countScore(rocket); %Update game score     
+            scoreText.String = sprintf("Score: %.0f", rocket.score);
+            
+            %Update fuel gauge
+            fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
+            fuelFillRect.Position(4) = fuelGaugeHeight;
+                
+            %Update throttle gauge
+            throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
+            throtFillRect.Position(3) = throtFillWidth;
+            
             %% Background
             %Scroll the background horizontally. It requires a positive value, so we do this.
             if delta_pos(1) < 0
@@ -355,9 +372,37 @@ function action
         
         titleSprite.State = 'crashScreen'; %Show crash screen
         
+        %Close the window with the q key
         if rocket.specialBuffer == 3
             G.stop();
             close(gcf);
+        end
+        
+        %Restart the game with the space key
+        if rocket.specialBuffer == 2
+            
+            %Reset rocket
+            rocket.Angle = Const.startingAngle;
+            rocket.Location = Const.startingPosition;
+            rocket.velocity = Const.startingVelocity;
+            rocket.State = 'thrust0';
+            rocket.altitude = Const.startingAltitude;
+            rocket.propMass = Const.startingPropMass;
+            rocket.dryMass = Const.dryMass;
+            rocket.mass = Const.startingPropMass + Const.dryMass;
+            rocket.throttle = Const.startingThrottle;
+            rocket.gameState = Const.restartGameState;
+            rocket.score = 0;
+            
+            %Reset cow
+            cow.State = 'off';
+            cow.xToNextCow = randi(Const.cowRandVals); %meters since last cow collected
+            
+            %Clear buffers
+            rocket.rotBuffer = 0;
+            rocket.throttleBuffer = 0;
+            rocket.specialBuffer = 0;
+            
         end
         
     end 
