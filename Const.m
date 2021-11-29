@@ -42,7 +42,7 @@ classdef Const
         %moved when its position changes by one meter)
         pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
-        zeroAlt = 100; %pixels
+        zeroAlt = 80; %pixels
         
         backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
         %% FUEL GAUGE CONSTANTS
@@ -121,7 +121,7 @@ classdef Const
         cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
-        cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
+        cowSpawnAlt = -0.5; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
         cowSpawnY = 0; %spawn y in pixels for old spawn behavior
         
