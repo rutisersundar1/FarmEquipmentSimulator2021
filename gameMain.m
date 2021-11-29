@@ -81,6 +81,10 @@ throtText.FontSize = 16;
 altitudeText = text(Const.altTextX, Const.altTextY, "");
 altitudeText.FontSize = 16;
 
+%Text that shows the game score
+scoreText = text(Const.scoreTextX, Const.scoreTextY, "");
+scoreText.FontSize = 16;
+
 %Debug text for debugging
 debugText = text(Const.debugTextX, Const.debugTextY, "");
 
@@ -116,6 +120,7 @@ function action
             throtText.Visible = 'off';
             
             altitudeText.Visible = 'off';
+            scoreText.Visible = 'off';
             
             %Take special buffer key inputs
             switch rocket.specialBuffer
@@ -169,6 +174,7 @@ function action
             throtText.Visible = 'on';
             
             altitudeText.Visible = 'on'; %altimeter text
+            scoreText.Visible = 'on'; %Score text
             
             %% Rocket Physics
             rocket.State = 'rocket1'; %Show the rocket
@@ -186,6 +192,10 @@ function action
                     cow.State = 'off'; %turn the cow off so it can be respawned
                     spawnCow(rocket, cow);
                 end
+            end
+            
+            if rocket.Location(2) <= Const.zeroAlt
+                rocket.gameState = 'crash';
             end
             
             rocket.specialBuffer = 0;
@@ -229,6 +239,9 @@ function action
             
             %Update altitude text
             altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
+            
+            %Update game score display
+            scoreText.String = sprintf("Score: %.0f", rocket.score);
             
             %Update throttle gauge
             throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
@@ -334,12 +347,19 @@ function action
         throtText.Visible = 'off';
         
         altitudeText.Visible = 'off'; %Hide altitude text
+        scoreText.Visible = 'on'; %Show score text
         
-        %Hide rocket and cow
-        rocket.State = 'hide';
+        %Crash rocket and hide cow
+        rocket.State = 'crash';
         cow.State = 'off';
         
-        titleSprite.State = 'crashScreen'; %Show crash screenw
+        titleSprite.State = 'crashScreen'; %Show crash screen
+        
+        if rocket.specialBuffer == 3
+            G.stop();
+            close(gcf);
+        end
+        
     end 
     
     debugString = "";
