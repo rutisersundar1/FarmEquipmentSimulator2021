@@ -17,8 +17,11 @@ classdef Const
         %performance impact.
         backgroundImg = 'Assets/background.png'; %Path to the background image
         backgroundScale = 1; %Do not change scale values.
+        
         rocketImg = 'Assets/rocket3.png'; %Path to the rocket image
         rocketScale = 1; %Do not change scale values.
+        
+        crashedRocketImg = 'Assets/rocket3_crashed.png'; %Crashed version of the rocket
         
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
