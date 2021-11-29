@@ -34,7 +34,7 @@ classdef Const
         %moved when its position changes by one meter)
         pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
-        zeroAlt = 20; %pixels
+        zeroAlt = 100; %pixels
         
         backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
         %% FUEL GAUGE CONSTANTS
@@ -54,6 +54,9 @@ classdef Const
         
         altTextX = Const.windowSize(1)/2 - 60 %altitude text x coord
         altTextY = Const.windowSize(2) - 40; %altitude text y coord
+        
+        scoreTextX = Const.windowSize(1) - 100; %Score text x coord
+        scoreTextY = Const.windowSize(2) - 40; %Score text y coord
         
         %Throttle gauge constants
         %How far off the bottom of the screen the throttle gauge is
@@ -105,6 +108,11 @@ classdef Const
         cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
         cowSpawnY = 0; %spawn y in pixels for old spawn behavior
+        
+        %% SCORING CONSTANTS
+        altitudeScoreCutoff = 5; %If below this altitude, score is counted
+        angleMultiplier = 1; %Multiplier for angle scoring
+        altitudeMultiplier = 1; %Multiplier for altitude scoring
         
         %% CONTROL CONSTANTS
         throttleInc = 1; %per second
