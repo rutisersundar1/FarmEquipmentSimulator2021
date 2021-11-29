@@ -20,14 +20,16 @@ bkg.Scale = Const.backgroundScale;
 rocket = createRocket(Const);
 cow = createCow(Const);
 
-rocket.Depth = 10; %In the middle
-cow.Depth = 0; %Behind the rocket
+%Having these on different depths results in collision not being processed
+%rocket.Depth = 0; 
+%cow.Depth = 0; 
 
 %Title/pause screen sprite
 titleSprite = SpriteKit.Sprite('title');
 
 titleSprite.initState('titleScreen', Const.titleScreenImg, true);
 titleSprite.initState('pauseScreen', Const.pauseScreenImg, true);
+titleSprite.initState('crashScreen', Const.crashScreenImg, true);
 titleSprite.initState('hide', Const.noneImg, true);
 
 titleSprite.Depth = 100; %Make sure this is always on top
@@ -289,9 +291,9 @@ function action
                 cow.State = 'off';
             %Removed kill for above and below screen
             elseif cow.Location(2) > Const.windowSize(2) + Const.cowKillMargin
-                cow.State = 'off';
+                %cow.State = 'off';
             elseif cow.Location(2) < -Const.cowKillMargin
-                cow.State = 'off';
+                %cow.State = 'off';
             end
             
             %Check the cow's collisions
@@ -319,7 +321,23 @@ function action
             end
 
     case 'crash' %Rocket crashed/game over
+        %Hide fuel gauge
+        fuelGaugeRect.Visible = 'off';
+        fuelFillRect.Visible = 'off';
+        fuelText.Visible = 'off';
         
+        %Hide throttle gauge
+        throtGaugeRect.Visible = 'off';
+        throtFillRect.Visible = 'off';
+        throtText.Visible = 'off';
+        
+        altitudeText.Visible = 'off'; %Hide altitude text
+        
+        %Hide rocket and cow
+        rocket.State = 'hide';
+        cow.State = 'off';
+        
+        titleSprite.State = 'crashScreen'; %Show crash screenw
     end 
     
     debugString = "";

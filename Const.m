@@ -6,11 +6,11 @@ classdef Const
         debugTextX = 100;
         debugTextY = 100;
         
-        debugShowRocketPos = 1; %shows rocket position
-        debugShowCowPos = 1; %show cow position
-        debugShowGameState = 1; %show game state
+        debugShowRocketPos = 0; %shows rocket position
+        debugShowCowPos = 0; %show cow position
+        debugShowGameState = 0; %show game state
         
-        debugForceSpawnCow = 1; %Debug key forces a cow to spawn
+        debugForceSpawnCow = 0; %Debug key forces a cow to spawn
         
         %% DISPLAY CONSTANTS
         %Scale values should not be changed from 1, as it has a significant
@@ -26,6 +26,7 @@ classdef Const
         
         titleScreenImg = 'Assets/titleScreen.png'; %Title screen
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
+        crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
         
         windowSize = [1280 720]; %Window size, pixels.
         
