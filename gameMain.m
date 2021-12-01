@@ -27,7 +27,7 @@ cow = createCow(Const);
 %Title/pause screen sprite
 titleSprite = SpriteKit.Sprite('title');
 
-titleSprite.initState('titleScreen', Const.titleScreenImg, true);
+titleSprite.initState('titleScreen', Const.titleScreenImg, false);
 titleSprite.initState('pauseScreen', Const.pauseScreenImg, true);
 titleSprite.initState('crashScreen', Const.crashScreenImg, true);
 titleSprite.initState('hide', Const.noneImg, true);
