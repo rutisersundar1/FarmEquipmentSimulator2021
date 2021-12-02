@@ -1,6 +1,11 @@
 %FARM EQUIPMENT SIMULATOR 2021
 %BUY NOW!
 
+%Created by:
+%Adam Rike            | Scoring, project management, website management
+%Jonah Robles         | Sprites and background, docs
+%Ranga Rutiser Sundar | Physics and input, title/pause/crash screens, docs
+
 function gameMain
 clear
 clc
