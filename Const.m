@@ -108,7 +108,7 @@ classdef Const
         %% STARTING CONSTANTS
         startingAngle = 0; %default angle, degrees
         startingPropMass = 360000; %default prop mass, kilograms
-        %startingPropMass = 10000; %testing low fuel behavior
+        %startingPropMass = 50000; %testing low fuel behavior
         startingPosition = Const.windowSize/2; %default position, m
         startingVelocity = [0,0]; %default velocity, m/s
         startingAltitude = 5; %default altitude, meters
@@ -117,7 +117,7 @@ classdef Const
         restartGameState = "title"; %game state if restarting
         
         %% COW CONSTANTS
-        cowPropMass = 1000; %mass of propellant given by cow, kilograms
+        cowPropMass = 10000; %mass of propellant given by cow, kilograms
         cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels

@@ -259,7 +259,8 @@ function action
             %% Scoring and Display
             %Show the rocket throttle states: If the rocket throttle is
             %between certain values, it shows a different size flame.
-            if rocket.throttle <= Const.throttle0cutoff
+            %Also if the rocket is out of propellant
+            if (rocket.throttle <= Const.throttle0cutoff) || rocket.propMass <= 1
                 rocket.State = 'thrust0';
             elseif rocket.throttle <= Const.throttle1cutoff
                 rocket.State = 'thrust1';
