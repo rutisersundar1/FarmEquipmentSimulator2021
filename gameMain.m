@@ -12,7 +12,13 @@ clc
 G = SpriteKit.Game.instance('Title', 'Farm Equipment Simulator 2021', 'Size', Const.windowSize);
 
 %Initialize Background object
-bkg = SpriteKit.Background(Const.backgroundImg);
+if Const.debugBlueScreenBG
+    %If blue screen is enabled, do that
+    bkg = SpriteKit.Background(Const.blueScreenBGImg);
+else
+    bkg = SpriteKit.Background(Const.backgroundImg);
+end
+
 bkg.Scale = Const.backgroundScale;
 
 %% Create Sprites
@@ -163,18 +169,31 @@ function action
             %Hide title/pause screen
             titleSprite.State = 'hide';
 
-            %Make fuel gauge visible
-            fuelGaugeRect.Visible = 'on';
-            fuelFillRect.Visible = 'on';
-            fuelText.Visible = 'on';
-            
-            %Make throttle gauge visible
-            throtGaugeRect.Visible = 'on';
-            throtFillRect.Visible = 'on';
-            throtText.Visible = 'on';
-            
-            altitudeText.Visible = 'on'; %altimeter text
-            scoreText.Visible = 'on'; %Score text
+            %Make fuel gauge visible unless hide UI is enabled
+            if ~Const.debugHideUI
+                fuelGaugeRect.Visible = 'on';
+                fuelFillRect.Visible = 'on';
+                fuelText.Visible = 'on';
+                
+                %Make throttle gauge visible
+                throtGaugeRect.Visible = 'on';
+                throtFillRect.Visible = 'on';
+                throtText.Visible = 'on';
+                altitudeText.Visible = 'on'; %altimeter text
+                scoreText.Visible = 'on'; %Score text
+            else
+                %Hide UI
+                fuelGaugeRect.Visible = 'off';
+                fuelFillRect.Visible = 'off';
+                fuelText.Visible = 'off';
+                
+                throtGaugeRect.Visible = 'off';
+                throtFillRect.Visible = 'off';
+                throtText.Visible = 'off';
+                
+                altitudeText.Visible = 'off';
+                scoreText.Visible = 'off';
+            end
             
             %% Rocket Physics
             rocket.State = 'thrust0'; %Show the rocket

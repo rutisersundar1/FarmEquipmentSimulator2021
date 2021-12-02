@@ -12,9 +12,13 @@ classdef Const
         
         debugForceSpawnCow = 0; %Debug key forces a cow to spawn
         
+        debugBlueScreenBG = 1; %bluescreen background for easier graphics
+        debugHideUI = 1; %hide the UI (gauges, altimeter, score). Does not apply when paused.
+        
         %% DISPLAY CONSTANTS
         %Scale values should not be changed from 1, as it has a significant
         %performance impact.
+        blueScreenBGImg = 'Assets/backgroundBlueScreen.png'; %bluescreen image
         backgroundImg = 'Assets/background.png'; %Path to the background image
         backgroundScale = 1; %Do not change scale values.
         
