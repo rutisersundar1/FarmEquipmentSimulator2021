@@ -34,5 +34,7 @@ function bufferKeys(~, event, rocket)
                     rocket.specialBuffer = 3; %quit game in pause menu
                 case 'c'
                     rocket.specialBuffer = 99; %debug
+                case 'h'
+                    rocket.specialBuffer = 4; %tutorial
             end
 end

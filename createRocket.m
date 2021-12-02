@@ -34,7 +34,7 @@ function rocket = createRocket()
     %them to read the game state without needing to pass it in explicitly.
     %Game state is stored as a string and regulates whether physics are
     %processed and what is shown on screen.
-    addprop(rocket, 'gameState'); %game state: "play" "pause" "crash" "title"
+    addprop(rocket, 'gameState'); %game state: "play" "pause" "crash" "title" "tut1"
     addprop(rocket, 'zeroAltLocPx'); %zero altitude location in pixels
     addprop(rocket, 'score'); %game score
     

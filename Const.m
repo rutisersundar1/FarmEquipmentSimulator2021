@@ -43,6 +43,8 @@ classdef Const
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
         
+        tutorial1Img = 'Assets/tutorial.png'; %Tutorial screen
+
         windowSize = [1280 720]; %Window size, pixels.
         
         %This controls how fast things appear to move (how far a sprite is
