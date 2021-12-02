@@ -1,6 +1,10 @@
 # FarmEquipmentSimulator2021
 A game written in MatLab that simulates rather expensive farm equipment.
 
+Supports:
+Windows 10 or 11 x64
+MATLAB R2021b
+
 Welcome to Farm Equipment Simulator 2021!
 
 Gameplay instructions:
