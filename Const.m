@@ -1,4 +1,7 @@
-%Stores constant values that need to be accessed from many locations.
+%Stores constant values that need to be accessed from many locations. This
+%allows us to not need to pass each of these into each function, or worse,
+%hard-code them. Most functions reference this when a value that doesn't change
+%is needed.
 classdef Const
     properties (Constant)
         %% DEBUG
@@ -104,7 +107,7 @@ classdef Const
         frameTime = 1 / 60; %seconds
         
         %Throttle cutoffs: Below these values, the rocket will appear to
-        %have a different size of flame.
+        %have a different size of flame (if it has propellant).
         throttle2cutoff = 0.8; %Mid throttle
         throttle1cutoff = 0.5; %Low throttle
         throttle0cutoff = 0.1; %Zero throttle
@@ -112,22 +115,30 @@ classdef Const
         %% STARTING CONSTANTS
         startingAngle = 0; %default angle, degrees
         startingPropMass = 360000; %default prop mass, kilograms
-        %startingPropMass = 50000; %testing low fuel behavior
+        %startingPropMass = 50000; %for testing low fuel behavior
+        %This is the middle of the screen by default, but could be changed
+        %if you wanted.
         startingPosition = Const.windowSize/2; %default position, m
         startingVelocity = [0,0]; %default velocity, m/s
         startingAltitude = 5; %default altitude, meters
+        %Start at full throttle so that we don't dump the player into the
+        %ground and crash instantly.
         startingThrottle = 1; %default throttle, 0 to 1
         startingGameState = "title"; %title screen
-        restartGameState = "title"; %game state if restarting
+        restartGameState = "title"; %game state if restarting from crash
         
         %% COW CONSTANTS
         cowPropMass = 10000; %mass of propellant given by cow, kilograms
         cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
+
+        %This value is negative because the cow needs to appear like its
+        %feet are on the ground. If it were zero, the cow looks like it's
+        %floating.
         cowSpawnAlt = -0.5; %Altitude over the ground to spawn the cow, meters
-        cowKillMargin = 400; %distance outside of the screen at which the cow should stop existing
-        cowSpawnY = 0; %spawn y in pixels for old spawn behavior
+        cowKillMargin = 400; %distance outside of the screen at which the cow should be set to invisible and intangible
+        %cowSpawnY = 0; %spawn y in pixels for old spawn behavior. no longer used
         
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
@@ -135,7 +146,7 @@ classdef Const
         altitudeMultiplier = 10; %Multiplier for altitude scoring
         
         %% CONTROL CONSTANTS
-        throttleInc = 1; %per second
+        throttleInc = 1; %per second. 1 means that it goes from zero to full throttle within one second.
         rotationInc = 180; %degrees per second
     end
 end

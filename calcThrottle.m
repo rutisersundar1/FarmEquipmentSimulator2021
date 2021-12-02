@@ -1,4 +1,5 @@
-%Handles throttle inputs and constrains throttle between 0 and 1.
+%Handles throttle inputs and constrains throttle between 0 and 1. Takes in
+%the rocket Sprite it is going to be acting on.
 function calcThrottle(rocket)
     %w is increase, s is decrease
     switch(rocket.throttleBuffer)

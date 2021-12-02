@@ -1,5 +1,5 @@
 %Handles rotation inputs and constrains rotation between zero and 360
-%degrees.
+%degrees. Takes in the rocket Sprite it is going to be acting on.
 function calcRotation(rocket)
     %Handle rotation inputs. Right is d and left is a.
     switch(rocket.rotBuffer)

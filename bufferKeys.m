@@ -1,3 +1,9 @@
+%This function is called as a keyPressFcn callback whenever the user
+%presses a key. It will assign different values to the rocket's three key
+%buffers depending on what key was pressed. The main code can then read
+%these values and decide what to do based on them - for example, rotate the
+%rocket if the a key was pressed. It then needs to set the buffer back to
+%zero, or else it will read it again next frame.
 function bufferKeys(~, event, rocket)
             %Rotation keys
             switch event.Key

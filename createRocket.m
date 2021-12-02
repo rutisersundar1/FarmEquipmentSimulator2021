@@ -1,5 +1,5 @@
 %Sets up and returns a Sprite object for the rocket.
-function rocket = createRocket(Const)
+function rocket = createRocket()
     %Create rocket Sprite object
     rocket = SpriteKit.Sprite('rocket');
 
@@ -7,8 +7,9 @@ function rocket = createRocket(Const)
     rocket.initState('hide', Const.noneImg, true); %hide rocket if needed
     rocket.initState('crash', Const.crashedRocketImg, true); %exploded rocket
     
-    %Different throttle states
-    rocket.initState('thrust0', Const.rocketImg, true); %Cut throttle
+    %Different throttle states. These allow displaying a different sized
+    %frame depending on the thrust value.
+    rocket.initState('thrust0', Const.rocketImg, true); %Cut throttle (no flame)
     rocket.initState('thrust1', Const.rocketThrust1Img, true); %Low throttle 
     rocket.initState('thrust2', Const.rocketThrust2Img, true); %Mid throttle
     rocket.initState('thrust3', Const.rocketThrust3Img, true); %High throttle
@@ -28,6 +29,11 @@ function rocket = createRocket(Const)
     addprop(rocket, 'altitude'); %altitude, meters
     addprop(rocket, 'maxPropMass'); %maximum prop mass, kg
     addprop(rocket, 'specialBuffer'); %key buffer for pause, etc. keys
+    %Game state is stored in the rocket so that it is easier to access for
+    %other functions. As they are being passed the rocket anyway, it allows
+    %them to read the game state without needing to pass it in explicitly.
+    %Game state is stored as a string and regulates whether physics are
+    %processed and what is shown on screen.
     addprop(rocket, 'gameState'); %game state: "play" "pause" "crash" "title"
     addprop(rocket, 'zeroAltLocPx'); %zero altitude location in pixels
     addprop(rocket, 'score'); %game score
@@ -49,7 +55,8 @@ function rocket = createRocket(Const)
     rocket.zeroAltLocPx = rocket.Location(2) - rocket.altitude * Const.pixelsPerMeter; 
     rocket.score = 0;
 
-    %These need to be initialized to 0 (empty)
+    %These need to be initialized to 0 (empty) because they store control
+    %inputs.
     rocket.throttleBuffer = 0;
     rocket.rotBuffer = 0;
     rocket.specialBuffer = 0;
