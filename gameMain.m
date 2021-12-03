@@ -468,7 +468,7 @@ function action
                     case 'rocket'
                         %Only give propellant if the cow is enabled (otherwise,
                         %it's a 1x1 transparent png and its position is irrelevant
-                        if cow.State == "on"
+                        if cow.State ~= "off"
                             %Give the rocket more propellant
                             rocket.propMass = rocket.propMass + cow.propAmt;
                             

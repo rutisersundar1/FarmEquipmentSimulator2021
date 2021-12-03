@@ -3,7 +3,14 @@
 %places it on screen where needed.
 function spawnCow(rocket, cow)
     if cow.State == "off"
-        cow.State = 'on';
+        if rand() <= Const.cowFlyChance
+            cow.State = 'fly';
+            cow_init_alt = randi(Const.cowFlyRandAlts);
+            cow_init_y = Const.zeroAlt + cow_init_alt * Const.pixelsPerMeter;
+        else
+            cow.State = 'on';        
+            cow_init_y = Const.zeroAlt + Const.cowSpawnAlt * Const.pixelsPerMeter;
+        end
         
         %This method is no longer used since vertical scrolling is
         %disabled.
@@ -15,7 +22,7 @@ function spawnCow(rocket, cow)
         %cow_init_y = zero_alt_px + (Const.cowSpawnAlt * Const.pixelsPerMeter);
 
         %Set the initial y value
-        cow_init_y = Const.zeroAlt + Const.cowSpawnAlt * Const.pixelsPerMeter;
+
 
         %The cow should always spawn in the direction the rocket is moving-
         %otherwise, it would just be scrolled off screen immediately. 

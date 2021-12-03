@@ -5,6 +5,7 @@ function cow = createCow()
     %Set up state
     cow.initState('on', Const.cowImg, true);
     cow.initState('off', Const.noneImg, true); %when the cow has been collected, this allows it to disappear
+    cow.initState('fly', Const.cowFlyImg, true); %flying cows!
 
     %Give it its properties
     addprop(cow, 'propAmt'); %amount of propellant in the cow, kg

@@ -38,7 +38,8 @@ classdef Const
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
-        
+        cowFlyImg = 'Assets/cowFly.png'; %flying cow image
+
         titleScreenImg = 'Assets/titleScreen.png'; %Title screen
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
@@ -105,7 +106,7 @@ classdef Const
         fuelRate = 5000; %propellant burned per second at maximum throttle, kilograms per second
         maxThrust = 5000000; %maximum thrust, newtons
         maxPropMass = 360000; %maximum propellant mass, kilograms
-        frictionMultiplier = 0.98; %velocity is multiplied by this each frame to approximate friction
+        frictionMultiplier = 0.99; %velocity is multiplied by this each frame to approximate friction
         frameTime = 1 / 60; %seconds
         
         %Throttle cutoffs: Below these values, the rocket will appear to
@@ -140,6 +141,10 @@ classdef Const
         %floating.
         cowSpawnAlt = -0.5; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should be set to invisible and intangible
+        cowFlyChance = 0.2; %chance for the cow to be flying. 0.2 = 20%
+
+        cowFlyRandAlts = [2, 10]; %random altitudes for flying cows to spawn!
+
         %cowSpawnY = 0; %spawn y in pixels for old spawn behavior. no longer used
         
         %% SCORING CONSTANTS
