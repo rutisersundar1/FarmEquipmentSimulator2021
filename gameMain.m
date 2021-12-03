@@ -1,6 +1,11 @@
 %FARM EQUIPMENT SIMULATOR 2021
 %BUY NOW!
 
+%Created by:
+%Adam Rike            | Scoring, project management, website management
+%Jonah Robles         | Sprites and background, docs
+%Ranga Rutiser Sundar | Physics and input, title/pause/crash screens, docs
+
 function gameMain
 clear
 clc
@@ -73,6 +78,7 @@ titleSprite = SpriteKit.Sprite('title');
 titleSprite.initState('titleScreen', Const.titleScreenImg, false);
 titleSprite.initState('pauseScreen', Const.pauseScreenImg, true);
 titleSprite.initState('crashScreen', Const.crashScreenImg, true);
+titleSprite.initState('tut1', Const.tutorial1Img, false);
 titleSprite.initState('hide', Const.noneImg, true);
 
 titleSprite.Depth = 100; %Make sure this is always on top of all other sprites
@@ -160,6 +166,45 @@ function action
     %Note that once title is left it is not designed to be returned to.
     switch rocket.gameState
      
+        case 'tut1' %tutorial page 1 (if more pages are added)
+            %% Tutorial Page
+            rocket.State = 'hide'; %hide the rocket
+            cow.State = 'off'; %hide the cow
+            titleSprite.State = 'tut1'; %show tutorial page
+            
+            %Hide fuel gauge
+            fuelGaugeRect.Visible = 'off';
+            fuelFillRect.Visible = 'off';
+            fuelText.Visible = 'off';
+            
+            throtGaugeRect.Visible = 'off';
+            throtFillRect.Visible = 'off';
+            throtText.Visible = 'off';
+            
+            altitudeText.Visible = 'off';
+            scoreText.Visible = 'off';
+
+            %Take special buffer key inputs
+            switch rocket.specialBuffer
+                case 2 %Spacebar (go to title)
+ 
+                    %Update fuel gauge fill height
+                    fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
+                    fuelFillRect.Position(4) = fuelGaugeHeight;
+                    
+                    %Set the rocket's game state so that next frame the
+                    %game will go to title
+                    rocket.gameState = 'title';
+                case 3 %q key, stop game
+                    G.stop(); %stop gameplay execution
+                    close(gcf); %Close the current figure (the game)
+            end
+        
+            %Clear the key buffers
+            rocket.throttleBuffer = 0;
+            rocket.rotBuffer = 0;
+            rocket.specialBuffer = 0;
+
         case 'title' %When on the title screen
             %% Title Screen
             rocket.State = 'hide'; %hide the rocket
@@ -181,8 +226,6 @@ function action
             %Take special buffer key inputs
             switch rocket.specialBuffer
                 case 2 %Spacebar (start game)
-
-                    
                     %Update fuel gauge fill height
                     fuelGaugeHeight = Const.fuelGaugeMaxHeight * rocket.propMass / rocket.maxPropMass;
                     fuelFillRect.Position(4) = fuelGaugeHeight;
@@ -193,6 +236,8 @@ function action
                 case 3 %q key, stop game
                     G.stop(); %stop gameplay execution
                     close(gcf); %Close the current figure (the game)
+                case 4 %h key, go to tutorial
+                    rocket.gameState = 'tut1';
             end
         
             %Clear the key buffers

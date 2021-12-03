@@ -43,6 +43,8 @@ classdef Const
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
         
+        tutorial1Img = 'Assets/tutorial.png'; %Tutorial screen
+
         windowSize = [1280 720]; %Window size, pixels.
         
         %This controls how fast things appear to move (how far a sprite is
@@ -128,8 +130,8 @@ classdef Const
         restartGameState = "title"; %game state if restarting from crash
         
         %% COW CONSTANTS
-        cowPropMass = 10000; %mass of propellant given by cow, kilograms
-        cowRandVals = [10, 30]; %minimum and maximum distance to next cow, meters
+        cowPropMass = 30000; %mass of propellant given by cow, kilograms
+        cowRandVals = [10, 60]; %minimum and maximum distance to next cow, meters
         propCowPity = 0.1; %value of the maximum fuel at which cow is force spawned
         cowSpawnMargin = 100; %distance from edge the cow should spawn, pixels
 
@@ -142,8 +144,8 @@ classdef Const
         
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
-        angleMultiplier = 10; %Multiplier for angle scoring
-        altitudeMultiplier = 10; %Multiplier for altitude scoring
+        angleMultiplier = 1; %Multiplier for angle scoring
+        altitudeMultiplier = 1; %Multiplier for altitude scoring
         
         %% CONTROL CONSTANTS
         throttleInc = 1; %per second. 1 means that it goes from zero to full throttle within one second.
