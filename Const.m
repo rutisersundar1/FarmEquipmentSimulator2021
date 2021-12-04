@@ -35,6 +35,8 @@ classdef Const
         rocketThrust2Img = 'Assets/rocket3_mid.png';
         rocketThrust3Img = 'Assets/rocket3_high.png';
         
+        exhaustImg = 'Assets/exhaust.png'; %exhaust particle
+
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
@@ -55,6 +57,7 @@ classdef Const
         zeroAlt = 80; %pixels
         
         backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
+
         %% FUEL GAUGE CONSTANTS
         
         fuelGaugeWidth = Const.windowSize(1) * 50/1280
@@ -144,8 +147,27 @@ classdef Const
         cowFlyChance = 0.2; %chance for the cow to be flying. 0.2 = 20%
 
         cowFlyRandAlts = [2, 10]; %random altitudes for flying cows to spawn!
+        cowFlyPropMass = 45000; %mass of propellant for flying cows, kg
 
         %cowSpawnY = 0; %spawn y in pixels for old spawn behavior. no longer used
+        
+        %% PARTICLE CONSTANTS
+
+        numParticles = 10;
+
+        defaultParticlePos = [0,0];
+
+        %Distance to offset the particle spawns from the rocket's location
+        particleOffsetDist = 20; %pixels
+        %Starting velocity when at max throttle
+        particleMaxVelocity = 10; %meters per second
+        particleVelocityMultiplier = 1; %Multiplies the particle's velocity
+
+        particleMaxAge = 30; %frames
+        %When a particle is despawned, its age is set to a very high
+        %number. This way, when looking for a slot to spawn a new particle
+        %in, this particle will be selected.
+        particleDespawnedAge = 9999; %Indicates a particle as despawned.
         
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
