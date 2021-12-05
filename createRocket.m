@@ -54,7 +54,8 @@ function rocket = createRocket()
     rocket.gameState = Const.startingGameState;
     rocket.zeroAltLocPx = rocket.Location(2) - rocket.altitude * Const.pixelsPerMeter; 
     rocket.score = 0;
-
+    rocket.Depth = Const.foregroundDepth;
+    
     %These need to be initialized to 0 (empty) because they store control
     %inputs.
     rocket.throttleBuffer = 0;

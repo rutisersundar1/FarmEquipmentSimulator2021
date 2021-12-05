@@ -35,11 +35,15 @@ classdef Const
         rocketThrust2Img = 'Assets/rocket3_mid.png';
         rocketThrust3Img = 'Assets/rocket3_high.png';
         
+        exhaustImg = 'Assets/exhaust.png'; %exhaust particle
+        particleScale = 5; %Scale for the particles
+
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
         cowFlyImg = 'Assets/cowFly.png'; %flying cow image
 
+        foregroundDepth = 5; %The rocket and cows appear on this depth.
         titleScreenImg = 'Assets/titleScreen.png'; %Title screen
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
@@ -52,9 +56,10 @@ classdef Const
         %moved when its position changes by one meter)
         pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
-        zeroAlt = 80; %pixels
+        zeroAlt = 80 - 0.5 * Const.pixelsPerMeter; %pixels
         
         backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
+
         %% FUEL GAUGE CONSTANTS
         
         fuelGaugeWidth = Const.windowSize(1) * 50/1280
@@ -139,14 +144,45 @@ classdef Const
         %This value is negative because the cow needs to appear like its
         %feet are on the ground. If it were zero, the cow looks like it's
         %floating.
-        cowSpawnAlt = -0.5; %Altitude over the ground to spawn the cow, meters
+        cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should be set to invisible and intangible
         cowFlyChance = 0.2; %chance for the cow to be flying. 0.2 = 20%
 
         cowFlyRandAlts = [2, 10]; %random altitudes for flying cows to spawn!
+        cowFlyPropMass = 45000; %mass of propellant for flying cows, kg
 
         %cowSpawnY = 0; %spawn y in pixels for old spawn behavior. no longer used
         
+        %% PARTICLE CONSTANTS
+
+        numParticles = 20; %Maximum number of particles
+        defaultParticlePos = [0,0]; %Default particle position when not in use
+
+        particleSpawnTime = 5; %frames, time between spawning new particles.
+
+        particleMaxAge = 180; %frames
+        %When a particle is despawned, its age is set to a very high
+        %number. This way, when looking for a slot to spawn a new particle
+        %in, this particle will be selected.
+        particleDespawnedAge = 9999; %Indicates a particle as despawned.
+
+        %Distance to offset the particle spawns from the rocket's location
+        particleOffsetDistance = -100; %pixels
+
+        %Starting velocity when at max throttle
+        particleMaxVelocity = 10; %meters per second
+        particleVelocityMultiplier = 1; %Multiplies the particle's velocity
+        particleAngleSpread = 10; %degrees, spread in angle when exiting the engine
+
+        %Particle drag
+        particleAirDrag = 0.9; %Drag multiplier applied every frame.
+        %Ground drag here has little basis in physics, but hopefully makes
+        %the exhaust behave in a more interesting way. The velocity is
+        %multiplied by element by this vector, so the ground reduces the
+        %vertical velocity more than the horizontal velocity. Only applied
+        %on a frame when the particle goes into the ground.
+        particleGroundDrag = [0.9, 0.3]; 
+
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
         angleMultiplier = 1; %Multiplier for angle scoring

@@ -66,6 +66,10 @@ this way.
 rocket = createRocket();
 cow = createCow();
 
+%Create the exhaust manager. This object handles updates and physics for
+%all exhaust particles.
+exhaustMgr = ExhaustMgr(rocket);
+
 %Having these on different depths results in collision not being processed
 %rocket.Depth = 0; 
 %cow.Depth = 0; 
@@ -168,6 +172,7 @@ function action
      
         case 'tut1' %tutorial page 1 (if more pages are added)
             %% Tutorial Page
+            exhaustMgr.killAllParticles(); %kill all particles so they are not visible.
             rocket.State = 'hide'; %hide the rocket
             cow.State = 'off'; %hide the cow
             titleSprite.State = 'tut1'; %show tutorial page
@@ -207,6 +212,7 @@ function action
 
         case 'title' %When on the title screen
             %% Title Screen
+            exhaustMgr.killAllParticles(); %kill all particles so they are not visible
             rocket.State = 'hide'; %hide the rocket
             cow.State = 'off'; %hide the cow
             titleSprite.State = 'titleScreen'; %show title screen
@@ -366,6 +372,8 @@ function action
             %Rough approximation of friction. Does the job.
             rocket.velocity = rocket.velocity * Const.frictionMultiplier; %m/s
             
+            delta_pos = [0,0];
+            
             %dx = v * dt
             delta_pos = rocket.velocity * Const.frameTime; %change in position this frame, meters
             
@@ -374,7 +382,7 @@ function action
             %The altitude is above the ground level, so it is offset here
             %to display properly.
             rocket.Location(2) = rocket.altitude * Const.pixelsPerMeter + Const.zeroAlt;
-            
+           
             %% Scoring and Display
             %Show the rocket throttle states: If the rocket throttle is
             %between certain values, it shows a different size flame.
@@ -389,6 +397,9 @@ function action
                 rocket.State = 'thrust3'; %Large flame
             end
                 
+            %Update the particles
+            exhaustMgr.updateParticles([delta_pos(1), 0]);
+
             %Update altitude text
             altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
 
@@ -485,6 +496,8 @@ function action
             end
 
     case 'crash' %Rocket crashed/game over
+        exhaustMgr.updateParticles([0,0]);
+
         %Hide fuel gauge
         fuelGaugeRect.Visible = 'off';
         fuelFillRect.Visible = 'off';
