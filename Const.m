@@ -36,12 +36,14 @@ classdef Const
         rocketThrust3Img = 'Assets/rocket3_high.png';
         
         exhaustImg = 'Assets/exhaust.png'; %exhaust particle
+        particleScale = 20; %Scale for the particles
 
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
         noneImg = 'Assets/noneImg.png'; %1x1 transparent png.
         cowFlyImg = 'Assets/cowFly.png'; %flying cow image
 
+        foregroundDepth = 5; %The rocket and cows appear on this depth.
         titleScreenImg = 'Assets/titleScreen.png'; %Title screen
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
@@ -153,22 +155,34 @@ classdef Const
         
         %% PARTICLE CONSTANTS
 
-        numParticles = 10;
+        numParticles = 10; %Maximum number of particles
+        defaultParticlePos = [0,0]; %Default particle position when not in use
 
-        defaultParticlePos = [0,0];
+        particleSpawnTime = 5; %frames, time between spawning new particles.
 
-        %Distance to offset the particle spawns from the rocket's location
-        particleOffsetDist = 20; %pixels
-        %Starting velocity when at max throttle
-        particleMaxVelocity = 10; %meters per second
-        particleVelocityMultiplier = 1; %Multiplies the particle's velocity
-
-        particleMaxAge = 30; %frames
+        particleMaxAge = 90; %frames
         %When a particle is despawned, its age is set to a very high
         %number. This way, when looking for a slot to spawn a new particle
         %in, this particle will be selected.
         particleDespawnedAge = 9999; %Indicates a particle as despawned.
-        
+
+        %Distance to offset the particle spawns from the rocket's location
+        particleOffsetDistance = 20; %pixels
+
+        %Starting velocity when at max throttle
+        particleMaxVelocity = 10; %meters per second
+        particleVelocityMultiplier = 1; %Multiplies the particle's velocity
+        particleAngleSpread = 10; %degrees, spread in angle when exiting the engine
+
+        %Particle drag
+        particleAirDrag = 0.9; %Drag multiplier applied every frame.
+        %Ground drag here has little basis in physics, but hopefully makes
+        %the exhaust behave in a more interesting way. The velocity is
+        %multiplied by element by this vector, so the ground reduces the
+        %vertical velocity more than the horizontal velocity. Only applied
+        %on a frame when the particle goes into the ground.
+        particleGroundDrag = [0.9, 0.3]; 
+
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
         angleMultiplier = 1; %Multiplier for angle scoring

@@ -12,6 +12,7 @@ function cow = createCow()
     addprop(cow, 'xToNextCow'); %distance until next cow, meters
     cow.State = 'off'; %Disable the cow to start
     cow.Scale = Const.cowScale; %set the scale of the sprite (shouldn't really be needed)
+    cow.Depth = Const.foregroundDepth; %set to foreground
 
     cow.propAmt = Const.cowPropMass; %Amount of propellant in the cow
     cow.xToNextCow = randi(Const.cowRandVals); %meters since last cow collected
