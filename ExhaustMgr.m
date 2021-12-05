@@ -29,6 +29,7 @@ classdef ExhaustMgr < handle
 
                 initState(ithParticle, 'on', Const.exhaustImg, true);
                 initState(ithParticle, 'off', Const.noneImg, true);
+                initState(ithParticle, 'dirt', Const.dirtImg, true);
 
                 addprop(ithParticle, 'velocity');
                 addprop(ithParticle, 'age');
@@ -73,6 +74,9 @@ classdef ExhaustMgr < handle
             targetParticle.Angle = randi(359);
             targetParticle.Scale = Const.particleScale;
 
+            %Randomized depth doesn't actually look much better, and it
+            %means more matrix math, so it impacts performance.
+            %{
             %Randomize the depth of the particle to create a 3D-ish
             %illusion. The depth is not ever equal to 5, as this is the
             %depth of the rocket and cow.
@@ -81,6 +85,8 @@ classdef ExhaustMgr < handle
             else
                 targetParticle.Depth = randi(4) + Const.foregroundDepth;
             end
+
+            %}
 
             %Reset the particle spawn timer.
             obj.particleSpawnTimer = Const.particleSpawnTime;
@@ -167,6 +173,7 @@ classdef ExhaustMgr < handle
                     %interesting
                     currentParticle.velocity = currentParticle.velocity...
                         .* Const.particleGroundDrag;
+                    currentParticle.State = 'dirt'; %Change to dirt particle
                 end
 
                 %Reduce the particles' speed slightly to simulate drag.

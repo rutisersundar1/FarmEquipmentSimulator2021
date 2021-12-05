@@ -36,6 +36,7 @@ classdef Const
         rocketThrust3Img = 'Assets/rocket3_high.png';
         
         exhaustImg = 'Assets/exhaust.png'; %exhaust particle
+        dirtImg = 'Assets/dirt.png'; %dirt particles
         particleScale = 5; %Scale for the particles
 
         cowImg = 'Assets/cow.png'; %Path to the cow image
@@ -182,9 +183,9 @@ classdef Const
         particleOffsetDistance = -100; %pixels
 
         %Starting velocity when at max throttle
-        particleMaxVelocity = 10; %meters per second
-        particleVelocityMultiplier = 1; %Multiplies the particle's velocity
-        particleAngleSpread = 10; %degrees, spread in angle when exiting the engine
+        particleMaxVelocity = 8; %meters per second
+        
+        particleAngleSpread = 20; %degrees, spread in angle when exiting the engine
         particleGravity = -3; %meters per second, gravity for particles
         particleScaleInc = 0.05; %Increase in particle size per frame
         %Particle drag
@@ -194,7 +195,7 @@ classdef Const
         %multiplied by element by this vector, so the ground reduces the
         %vertical velocity more than the horizontal velocity. Only applied
         %on a frame when the particle goes into the ground.
-        particleGroundDrag = [0.9, 0.3]; 
+        particleGroundDrag = [1, 0.2]; 
 
         %% SCORING CONSTANTS
         altitudeScoreCutoff = 5; %If below this altitude, score is counted
