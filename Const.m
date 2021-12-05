@@ -48,6 +48,8 @@ classdef Const
         pauseScreenImg = 'Assets/pauseScreen.png'; %Pause screen
         crashScreenImg = 'Assets/crashScreen.png'; %Crash screen
         
+        crashedTractorImg = 'Assets/crashedTractor.png' %Crashed tractor obstacle
+
         tutorial1Img = 'Assets/tutorial.png'; %Tutorial screen
 
         windowSize = [1280 720]; %Window size, pixels.
@@ -120,6 +122,12 @@ classdef Const
         throttle1cutoff = 0.5; %Low throttle
         throttle0cutoff = 0.1; %Zero throttle
         
+        %Altitude above the zero altitude at which the rocket crashes. This
+        %is needed because the zero altitude is lower than the ground
+        %appears (to facilitate the cows and tractors spawning in the
+        %correct place)
+        crashAlt = Const.zeroAlt + 0.3 * Const.pixelsPerMeter; %meters
+        crashSpeed = 3; %meters per second. Below this will not crash.
         %% STARTING CONSTANTS
         startingAngle = 0; %default angle, degrees
         startingPropMass = 360000; %default prop mass, kilograms
@@ -145,14 +153,18 @@ classdef Const
         %feet are on the ground. If it were zero, the cow looks like it's
         %floating.
         cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
+        tractorSpawnAlt = 1; %Altitude over the ground for when the cow is a tractor.
         cowKillMargin = 400; %distance outside of the screen at which the cow should be set to invisible and intangible
         cowFlyChance = 0.2; %chance for the cow to be flying. 0.2 = 20%
+
+        tractorChance = 0.1; %Chance of being evil and spawning a tractor instead of a cow
+        tractorScale = 1; %tractor's display scale
 
         cowFlyRandAlts = [2, 10]; %random altitudes for flying cows to spawn!
         cowFlyPropMass = 45000; %mass of propellant for flying cows, kg
 
         %cowSpawnY = 0; %spawn y in pixels for old spawn behavior. no longer used
-        
+
         %% PARTICLE CONSTANTS
 
         numParticles = 20; %Maximum number of particles
@@ -173,7 +185,8 @@ classdef Const
         particleMaxVelocity = 10; %meters per second
         particleVelocityMultiplier = 1; %Multiplies the particle's velocity
         particleAngleSpread = 10; %degrees, spread in angle when exiting the engine
-
+        particleGravity = -3; %meters per second, gravity for particles
+        particleScaleInc = 0.05; %Increase in particle size per frame
         %Particle drag
         particleAirDrag = 0.9; %Drag multiplier applied every frame.
         %Ground drag here has little basis in physics, but hopefully makes

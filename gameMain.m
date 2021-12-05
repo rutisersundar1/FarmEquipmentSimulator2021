@@ -316,8 +316,17 @@ function action
                 end
             end
             
-            if rocket.Location(2) <= Const.zeroAlt
-                rocket.gameState = 'crash';
+            %The magnitude of the rocket's velocity
+            rocketSpeed = sqrt(rocket.velocity(1)^2 + rocket.velocity(2)^2);
+            %If the rocket goes below the crash altitude, set the game
+            %state to crashed.
+            if (rocket.Location(2) <= Const.crashAlt)
+                if rocketSpeed >= Const.crashSpeed
+                    rocket.gameState = 'crash';
+                else
+                    rocket.Location(2) = Const.crashAlt;
+                    rocket.velocity(2) = 0;
+                end
             end
             
             rocket.specialBuffer = 0;
@@ -372,8 +381,6 @@ function action
             %Rough approximation of friction. Does the job.
             rocket.velocity = rocket.velocity * Const.frictionMultiplier; %m/s
             
-            delta_pos = [0,0];
-            
             %dx = v * dt
             delta_pos = rocket.velocity * Const.frameTime; %change in position this frame, meters
             
@@ -383,6 +390,20 @@ function action
             %to display properly.
             rocket.Location(2) = rocket.altitude * Const.pixelsPerMeter + Const.zeroAlt;
            
+            %% Check for crashes or landing
+            %The magnitude of the rocket's velocity
+            rocketSpeed = sqrt(rocket.velocity(1)^2 + rocket.velocity(2)^2);
+            %If the rocket goes below the crash altitude, set the game
+            %state to crashed.
+            if (rocket.Location(2) <= Const.crashAlt)
+                %if rocketSpeed >= Const.crashSpeed
+                    rocket.gameState = 'crash';
+                %elseif rocket.velocity(2) <= 0
+                %   rocket.Location(2) = Const.crashAlt;
+                %   rocket.velocity(2) = 0;
+                %end
+            end
+            
             %% Scoring and Display
             %Show the rocket throttle states: If the rocket throttle is
             %between certain values, it shows a different size flame.
@@ -477,24 +498,28 @@ function action
                 switch target.ID %What Sprite it has collided with
                     %Give the rocket propellant if it hits the cow
                     case 'rocket'
-                        %Only give propellant if the cow is enabled (otherwise,
-                        %it's a 1x1 transparent png and its position is irrelevant
-                        if cow.State ~= "off"
-                            %Give the rocket more propellant
-                            rocket.propMass = rocket.propMass + cow.propAmt;
+                        %If the cow is actually a tractor, crash the
+                        %rocket.
+                        if cow.State == "tractor"
+                            rocket.gameState = "crash";
                             
-                            %Make sure the rocket doesn't exceed its maximum
-                            %propellant mass
-                            if rocket.propMass > rocket.maxPropMass
-                                rocket.propMass = rocket.maxPropMass;
-                            end
-                            
-                            cow.xToNextCow = randi(Const.cowRandVals); %Reset the counter for next cow spawn
-                            cow.State = 'off'; %Disable the cow
+                            %Only give propellant if the cow is enabled (otherwise,
+                            %it's a 1x1 transparent png and its position is irrelevant
+                         elseif cow.State ~= "off"
+                             %Give the rocket more propellant
+                             rocket.propMass = rocket.propMass + cow.propAmt;
+
+                             %Make sure the rocket doesn't exceed its maximum
+                             %propellant mass
+                             if rocket.propMass > rocket.maxPropMass
+                                 rocket.propMass = rocket.maxPropMass;
+                             end
+
+                             cow.xToNextCow = randi(Const.cowRandVals); %Reset the counter for next cow spawn
+                             cow.State = 'off'; %Disable the cow
                         end
                 end
             end
-
     case 'crash' %Rocket crashed/game over
         exhaustMgr.updateParticles([0,0]);
 
@@ -511,9 +536,10 @@ function action
         altitudeText.Visible = 'off'; %Hide altitude text
         scoreText.Visible = 'on'; %Show score text
         
+        %          don't vw
         %Crash rocket and hide cow
         rocket.State = 'crash';
-        cow.State = 'off';
+        %cow.State = 'off';
         
         titleSprite.State = 'crashScreen'; %Show crash screen
         

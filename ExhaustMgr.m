@@ -172,9 +172,10 @@ classdef ExhaustMgr < handle
                 %Reduce the particles' speed slightly to simulate drag.
                 currentParticle.velocity = currentParticle.velocity * Const.particleAirDrag;
                 %Apply gravity to the particles.
-                currentParticle.velocity = currentParticle.velocity + Const.gravity * Const.frameTime;
+                currentParticle.velocity = currentParticle.velocity...
+                    + Const.particleGravity * Const.frameTime;
 
-                currentParticle.Scale = currentParticle.Scale + 0.1;
+                currentParticle.Scale = currentParticle.Scale + Const.particleScaleInc;
 
                 %% Despawn checks
                 %If the particle is scrolled off screen, disable it.

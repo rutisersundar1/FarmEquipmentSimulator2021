@@ -1,15 +1,21 @@
-%Spawns the cow on screen. When not enabled, the cow is just invisible and
+%Spawns the cow (or crashed tractor) on screen. When not enabled, the cow is just invisible and
 %intangible, and it continues to be moved. This sets it to be visible and
 %places it on screen where needed.
 function spawnCow(rocket, cow)
     if cow.State == "off"
-        if rand() <= Const.cowFlyChance
+        if rand() <= Const.tractorChance
+            cow.State = 'tractor';
+            cow_init_y= Const.zeroAlt + Const.tractorSpawnAlt * Const.pixelsPerMeter;
+            cow.Scale = Const.tractorScale;
+        elseif rand() <= Const.cowFlyChance
             cow.State = 'fly';
             cow_init_alt = randi(Const.cowFlyRandAlts);
             cow_init_y = Const.zeroAlt + cow_init_alt * Const.pixelsPerMeter;
+            cow.Scale = Const.cowScale;
         else
             cow.State = 'on';        
             cow_init_y = Const.zeroAlt + Const.cowSpawnAlt * Const.pixelsPerMeter;
+            cow.Scale = Const.cowScale;
         end
         
         %This method is no longer used since vertical scrolling is
