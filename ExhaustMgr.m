@@ -153,18 +153,18 @@ classdef ExhaustMgr < handle
             %specified
             for currentParticle = obj.particleList                
                 %Move each particle according to its velocity.
-                currentParticle.Location = currentParticle.Location...
+                newLocation = currentParticle.Location...
                         + (currentParticle.velocity * Const.pixelsPerMeter...
                         * Const.frameTime);
 
                 %Scroll the particle as needed.
-                currentParticle.Location = currentParticle.Location...
+                newLocation = newLocation...
                     + particleScrollDist * Const.pixelsPerMeter;
 
                 %Check if the particle has hit the ground.
-                if currentParticle.Location(2) <= Const.zeroAlt
+                if newLocation(2) <= Const.zeroAlt
                     %Force the particle above ground.
-                    currentParticle.Location(2) = Const.zeroAlt;
+                    newLocation(2) = Const.zeroAlt;
 
                     %Make its velocity in the vertical direction positive
                     currentParticle.velocity(2) = abs(currentParticle.velocity(2));
@@ -176,6 +176,8 @@ classdef ExhaustMgr < handle
                     currentParticle.State = 'dirt'; %Change to dirt particle
                 end
 
+                currentParticle.Location = newLocation;
+                
                 %Reduce the particles' speed slightly to simulate drag.
                 currentParticle.velocity = currentParticle.velocity * Const.particleAirDrag;
                 %Apply gravity to the particles.
