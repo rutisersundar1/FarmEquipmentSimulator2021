@@ -398,7 +398,7 @@ function action
             end
                 
             %Update the particles
-            exhaustMgr.updateParticles(-1 * delta_pos);
+            exhaustMgr.updateParticles([delta_pos(1), 0]);
 
             %Update altitude text
             altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
@@ -496,6 +496,8 @@ function action
             end
 
     case 'crash' %Rocket crashed/game over
+        exhaustMgr.updateParticles([0,0]);
+
         %Hide fuel gauge
         fuelGaugeRect.Visible = 'off';
         fuelFillRect.Visible = 'off';

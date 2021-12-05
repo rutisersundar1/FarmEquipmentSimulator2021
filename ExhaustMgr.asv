@@ -70,7 +70,7 @@ classdef ExhaustMgr < handle
             targetParticle.age = 0;
             targetParticle.Location = position;
             targetParticle.velocity = velocity;
-            targetParticle.Angle = randi(359);
+
             targetParticle.Scale = Const.particleScale;
 
             %Randomize the depth of the particle to create a 3D-ish
@@ -195,13 +195,12 @@ classdef ExhaustMgr < handle
                 end
             end
 
-           if obj.rocket.gameState == "play" && obj.rocket.propMass > 0
-               %% Spawn new particles if needed
-               obj.particleSpawnTimer = obj.particleSpawnTimer - 1;
-               if obj.particleSpawnTimer <= 0
-                   %try to spawn a particle from the engine
-                   spawnParticleFromEngine(obj);
-               end
+           if rocket.gameState == "play"
+           %% Spawn new particles if needed
+           obj.particleSpawnTimer = obj.particleSpawnTimer - 1;
+           if obj.particleSpawnTimer <= 0
+               %try to spawn a particle from the engine
+               spawnParticleFromEngine(obj);
            end
         end
     end

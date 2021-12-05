@@ -36,7 +36,7 @@ classdef Const
         rocketThrust3Img = 'Assets/rocket3_high.png';
         
         exhaustImg = 'Assets/exhaust.png'; %exhaust particle
-        particleScale = 20; %Scale for the particles
+        particleScale = 5; %Scale for the particles
 
         cowImg = 'Assets/cow.png'; %Path to the cow image
         cowScale = 1; %Do not change scale values.
@@ -56,7 +56,7 @@ classdef Const
         %moved when its position changes by one meter)
         pixelsPerMeter = Const.windowSize(1) * 50/1280;
         
-        zeroAlt = 80; %pixels
+        zeroAlt = 80 - 0.5 * Const.pixelsPerMeter; %pixels
         
         backgroundVerticalScroll = 0; %Whether or not to scroll the backround up and down
 
@@ -144,7 +144,7 @@ classdef Const
         %This value is negative because the cow needs to appear like its
         %feet are on the ground. If it were zero, the cow looks like it's
         %floating.
-        cowSpawnAlt = -0.5; %Altitude over the ground to spawn the cow, meters
+        cowSpawnAlt = 0; %Altitude over the ground to spawn the cow, meters
         cowKillMargin = 400; %distance outside of the screen at which the cow should be set to invisible and intangible
         cowFlyChance = 0.2; %chance for the cow to be flying. 0.2 = 20%
 
@@ -155,19 +155,19 @@ classdef Const
         
         %% PARTICLE CONSTANTS
 
-        numParticles = 10; %Maximum number of particles
+        numParticles = 20; %Maximum number of particles
         defaultParticlePos = [0,0]; %Default particle position when not in use
 
         particleSpawnTime = 5; %frames, time between spawning new particles.
 
-        particleMaxAge = 90; %frames
+        particleMaxAge = 180; %frames
         %When a particle is despawned, its age is set to a very high
         %number. This way, when looking for a slot to spawn a new particle
         %in, this particle will be selected.
         particleDespawnedAge = 9999; %Indicates a particle as despawned.
 
         %Distance to offset the particle spawns from the rocket's location
-        particleOffsetDistance = 20; %pixels
+        particleOffsetDistance = -100; %pixels
 
         %Starting velocity when at max throttle
         particleMaxVelocity = 10; %meters per second
