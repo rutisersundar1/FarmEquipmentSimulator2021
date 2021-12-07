@@ -6,6 +6,8 @@
 %Jonah Robles         | Sprites and background, docs
 %Ranga Rutiser Sundar | Physics and input, title/pause/crash screens, docs
 
+%gameMain handles all game logic and the main game loop. It refers to
+%Const.m for constants that need to be set.
 function gameMain
 clear
 clc
@@ -63,8 +65,85 @@ this way.
 %and properties for the rocket and cow sprites and return a Sprite object.
 %They retrieve values from the Const file to refer to (for example, initial
 %states or what images to use).
-rocket = createRocket();
-cow = createCow();
+%% Create rocket Sprite object
+rocket = SpriteKit.Sprite('rocket');
+
+%Set up the default state for the rocket and give it its image
+rocket.initState('hide', Const.noneImg, true); %hide rocket if needed
+rocket.initState('crash', Const.crashedRocketImg, true); %exploded rocket
+
+%Different throttle states. These allow displaying a different sized
+%frame depending on the thrust value.
+rocket.initState('thrust0', Const.rocketImg, true); %Cut throttle (no flame)
+rocket.initState('thrust1', Const.rocketThrust1Img, true); %Low throttle
+rocket.initState('thrust2', Const.rocketThrust2Img, true); %Mid throttle
+rocket.initState('thrust3', Const.rocketThrust3Img, true); %High throttle
+
+%Give the rocket its necessary properties. These are per rocket in case
+%multiplayer is wanted in the future or in case multiple rocket models
+%would be wanted.
+addprop(rocket, 'velocity'); %1x2 velocity meters per second
+addprop(rocket, 'propMass'); %propellant mass kg
+addprop(rocket, 'dryMass'); %dry mass kg
+addprop(rocket, 'mass'); %total mass, kilograms
+addprop(rocket, 'fuelRate'); %fuel rate at max throttle kg/s
+addprop(rocket, 'maxThrust'); %maximum thrust, N
+addprop(rocket, 'throttle'); %throttle, 0 to 1
+addprop(rocket, 'throttleBuffer'); %key buffer for throttle keys
+addprop(rocket, 'rotBuffer'); %key buffer for rotation keys
+addprop(rocket, 'altitude'); %altitude, meters
+addprop(rocket, 'maxPropMass'); %maximum prop mass, kg
+addprop(rocket, 'specialBuffer'); %key buffer for pause, etc. keys
+%Game state is stored in the rocket so that it is easier to access for
+%other functions. As they are being passed the rocket anyway, it allows
+%them to read the game state without needing to pass it in explicitly.
+%Game state is stored as a string and regulates whether physics are
+%processed and what is shown on screen.
+addprop(rocket, 'gameState'); %game state: "play" "pause" "crash" "title" "tut1"
+addprop(rocket, 'zeroAltLocPx'); %zero altitude location in pixels
+addprop(rocket, 'score'); %game score
+
+%Initialize rocket physics and give it its values
+rocket.Location = Const.startingPosition;
+rocket.velocity = Const.startingVelocity;
+rocket.State = 'thrust0';
+rocket.Scale = Const.rocketScale;
+rocket.altitude = Const.startingAltitude;
+rocket.propMass = Const.startingPropMass;
+rocket.dryMass = Const.dryMass;
+rocket.mass = Const.startingPropMass + Const.dryMass;
+rocket.fuelRate = Const.fuelRate;
+rocket.maxThrust = Const.maxThrust;
+rocket.throttle = Const.startingThrottle;
+rocket.maxPropMass = Const.maxPropMass;
+rocket.gameState = Const.startingGameState;
+rocket.zeroAltLocPx = rocket.Location(2) - rocket.altitude * Const.pixelsPerMeter;
+rocket.score = 0;
+rocket.Depth = Const.foregroundDepth;
+
+%These need to be initialized to 0 (empty) because they store control
+%inputs.
+rocket.throttleBuffer = 0;
+rocket.rotBuffer = 0;
+rocket.specialBuffer = 0;
+%% Create cow Sprite object
+cow = SpriteKit.Sprite('cow');
+
+%Set up state
+cow.initState('on', Const.cowImg, true);
+cow.initState('off', Const.noneImg, true); %when the cow has been collected, this allows it to disappear
+cow.initState('fly', Const.cowFlyImg, true); %flying cows!
+cow.initState('tractor', Const.crashedTractorImg, true); %when your cow is a tractor.
+
+%Give it its properties
+addprop(cow, 'propAmt'); %amount of propellant in the cow, kg
+addprop(cow, 'xToNextCow'); %distance until next cow, meters
+cow.State = 'off'; %Disable the cow to start
+cow.Scale = Const.cowScale; %set the scale of the sprite (shouldn't really be needed)
+cow.Depth = Const.foregroundDepth; %set to foreground
+
+cow.propAmt = Const.cowPropMass; %Amount of propellant in the cow
+cow.xToNextCow = randi(Const.cowRandVals); %meters since last cow collected
 
 %Create the exhaust manager. This object handles updates and physics for
 %all exhaust particles.
@@ -331,13 +410,60 @@ function action
             
             rocket.specialBuffer = 0;
             
-            %Read key inputs from the buffer and update throttle and rotation.
-            %calcThrottle and calcRotation handle constraining the throttle and
-            %rotation between their needed values.
-            calcThrottle(rocket);
-            calcRotation(rocket);
-            
-            %Handle throttle: check for propellant out, calculate thrust vector,
+            %Read key inputs from the buffer and update throttle
+
+            %w is increase, s is decrease
+            switch(rocket.throttleBuffer)
+                case 1 %z key, max throttle
+                    throttleVal = 1;
+                case 2 %x key, cut throttle
+                    throttleVal = 0;
+                case 3 %w key, increase throttle
+                    throttleVal = rocket.throttle + Const.throttleInc * Const.frameTime;
+                case 4 %s key, reduce throttle
+                    throttleVal = rocket.throttle - Const.throttleInc * Const.frameTime;
+                otherwise
+                    throttleVal = rocket.throttle;
+            end
+
+            %Constrain throttle between 0 and 1.
+            if throttleVal > 1
+                throttleVal = 1;
+            end
+
+            if throttleVal < 0
+                throttleVal = 0;
+            end
+
+            %Assign the working value to the output
+            rocket.throttle = throttleVal;
+            rocket.throttleBuffer = 0; %Clear the throttle buffer
+
+            %Handle rotation inputs. Right is d and left is a.
+            switch(rocket.rotBuffer)
+                case 2 %d key, rotate right
+                    rotationVal = rocket.Angle - Const.rotationInc * Const.frameTime;
+                case 1 %a key, rotate left
+                    rotationVal = rocket.Angle + Const.rotationInc * Const.frameTime;
+                    %fprintf("rotating left, rotation is now %f deg\n", rotation);
+                otherwise
+                    rotationVal = rocket.Angle;
+            end
+
+            %Constrain rotation between 0 and 360 by adding or subtracting 360.
+            while rotationVal >= 360
+                rotationVal = rotationVal - 360;
+            end
+
+            while rotationVal < 0
+                rotationVal = rotationVal + 360;
+            end
+
+            %Assign the working value to the output.
+            rocket.Angle = rotationVal;
+            rocket.rotBuffer = 0; %clear rotation buffer
+
+            %Handle engine physics: check for out of propellant, calculate thrust vector,
             %and subtract propellant.
             if rocket.propMass <= 0
                 rocket.propMass = 0;
@@ -365,8 +491,6 @@ function action
             %Update the rocket's total mass with the new propellant mass
             rocket.mass = rocket.propMass + rocket.dryMass; %kg
 
-            %disp(rocket.mass);
-
             %Calculate the forces acting on the rocket
             gravityForce = [0, rocket.mass * Const.gravity]; %force of gravity, Newtons
             
@@ -391,14 +515,16 @@ function action
             rocket.Location(2) = rocket.altitude * Const.pixelsPerMeter + Const.zeroAlt;
            
             %% Check for crashes or landing
+            %Landing is commented out for now because it was not working
+            %correctly.
             %The magnitude of the rocket's velocity
-            rocketSpeed = sqrt(rocket.velocity(1)^2 + rocket.velocity(2)^2);
+            %rocketSpeed = sqrt(rocket.velocity(1)^2 + rocket.velocity(2)^2);
             %If the rocket goes below the crash altitude, set the game
             %state to crashed.
             if (rocket.Location(2) <= Const.crashAlt)
                 %if rocketSpeed >= Const.crashSpeed
                     rocket.gameState = 'crash';
-                %elseif rocket.velocity(2) <= 0
+                %elseif rocket.velocity(2) < 0
                 %   rocket.Location(2) = Const.crashAlt;
                 %   rocket.velocity(2) = 0;
                 %end
@@ -425,8 +551,16 @@ function action
             altitudeText.String = sprintf("Altitude: %.0f m", rocket.altitude);
 
             %Update game score display
-            %countScore takes care of handling scoring.
-            countScore(rocket); %Update game score     
+            %If rocket is below scoring threshold, count score
+            if (rocket.altitude < Const.altitudeScoreCutoff)
+                %Score due to angle (flatter is better)
+                angleScoreAdd = cosd(rocket.Angle) * (Const.angleMultiplier);
+                %Score due to altitude (lower is better)
+                altScoreAdd = (Const.altitudeScoreCutoff - rocket.altitude) * (Const.altitudeMultiplier);
+                %Add to rocket score
+                rocket.score = rocket.score + angleScoreAdd + altScoreAdd;
+            end
+
             scoreText.String = sprintf("Score: %.0f", rocket.score);
             
             %Update fuel gauge

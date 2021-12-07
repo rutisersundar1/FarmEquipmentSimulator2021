@@ -17,7 +17,7 @@ classdef ExhaustMgr < handle
             obj.rocket = rocket;
             obj.particleSpawnTimer = Const.particleSpawnTime;
 
-            disp(obj.particleList);
+            %disp(obj.particleList);
             %Initialize the particle list
             for i = 1:Const.numParticles
                 %part1, part2, etc.
