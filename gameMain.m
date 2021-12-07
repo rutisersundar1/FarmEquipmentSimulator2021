@@ -126,6 +126,7 @@ rocket.Depth = Const.foregroundDepth;
 rocket.throttleBuffer = 0;
 rocket.rotBuffer = 0;
 rocket.specialBuffer = 0;
+
 %% Create cow Sprite object
 cow = SpriteKit.Sprite('cow');
 
@@ -145,6 +146,7 @@ cow.Depth = Const.foregroundDepth; %set to foreground
 cow.propAmt = Const.cowPropMass; %Amount of propellant in the cow
 cow.xToNextCow = randi(Const.cowRandVals); %meters since last cow collected
 
+%% Set up exhaust manager and title sprite.
 %Create the exhaust manager. This object handles updates and physics for
 %all exhaust particles.
 exhaustMgr = ExhaustMgr(rocket);

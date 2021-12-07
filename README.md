@@ -27,3 +27,17 @@ Farm Equipment Simulator 2021 uses Steve McClure's SpriteKit Framework for sprit
 Steve McClure (2021). SpriteKit Framework (https://www.mathworks.com/matlabcentral/fileexchange/46643-spritekit-framework), MATLAB Central File Exchange. Retrieved November 29, 2021.
 
 Farm Equipment Simulator 2021 was created for the Software Design Project as part of The Ohio State University's ENGR 1181 Fundamentals of Engineering course. The software comes with no warranty and will not be supported past its due date.
+
+Main functions:
+gameMain handles all game logic, physics, scoring, etc.
+Const is an object to store game constants, such as gravity, the maximum number of particles drawn, the rocket's dry mass, and the like.
+ExhaustMgr is an admittedly clunky object-oriented weirdness that should have been written procedurally. I'm sorry. -Ranga. Oh, and it does everything the exhaust system needs. All exhaust particles are children of this object.
+Seriously, I'm questioning why I wrote this as an object in the first place. It doesn't represent anything real that the user interacts with so OOP makes no sense here. 
+I would rewrite it in a better way but I have finals to study for, so we'll leave it in its clunky but functional form for now.
+bufferKeys is assigned as a keyPressFcn callback. This means it is called every time the user presses a key. It stores this key press to the rocket's key buffer. gameMain can then read it when needed.
+
+The "Assets" folder contains all .png images used for the various sprites, title screens, and backgrounds for the game.
+The "GIMP files" folder contains the .xcf files used to create these, which makes editing them more convenient.
+The "Old" folder contains several older files from before the game was rewritten to use the SpriteKit Framework. They are not likely to function correctly, as pretty much all the code has been rewritten since then.
+The "Docs" folder contains some documentation regarding the game, though the most accurate documentation will likely be that on the website, u.osu.edu/fe1181au21sec28321g/.
+
