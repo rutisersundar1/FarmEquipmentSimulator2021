@@ -601,59 +601,63 @@ function action
                 end
             end
 
-            %% Cow Handling            
-            %Scroll the cow. We move it by the change in position in
-            %meters. It does not move vertically.
-            cow.Location = cow.Location + [1, 0] .* delta_pos * Const.pixelsPerMeter;
-            %fprintf("cow location %i, %i", cow.Location(1), cow.Location(2));
+            %% Cow Handling 
             
             %Add the x-movement to the cow's counter for respawning
             cow.xToNextCow = cow.xToNextCow - abs(delta_pos(1));
-            
+
             %If the rocket has travelled far enough since the last cow or is low on fuel,
             %spawn a new one
             if (cow.xToNextCow <= 0) || rocket.propMass < Const.propCowPity
                 spawnCow(rocket, cow);
             end
-            
-            %Check that the cow is not way off screen
-            if cow.Location(1) < -Const.cowKillMargin
-                cow.State = 'off';
-            elseif cow.Location(1) > Const.windowSize(1) + Const.cowKillMargin
-                cow.State = 'off';
-            %Removed kill for above and below screen
-            elseif cow.Location(2) > Const.windowSize(2) + Const.cowKillMargin
-                %cow.State = 'off';
-            elseif cow.Location(2) < -Const.cowKillMargin
-                %cow.State = 'off';
-            end
-            
-            %Check the cow's collisions in case it hits the rocket.
-            [collide, target] = SpriteKit.Physics.hasCollision(cow);
-            if collide %If it has collided with another Sprite
-                switch target.ID %What Sprite it has collided with
-                    %Give the rocket propellant if it hits the cow
-                    case 'rocket'
-                        %If the cow is actually a tractor, crash the
-                        %rocket.
-                        if cow.State == "tractor"
-                            rocket.gameState = "crash";
-                            
-                            %Only give propellant if the cow is enabled (otherwise,
-                            %it's a 1x1 transparent png and its position is irrelevant
-                         elseif cow.State ~= "off"
-                             %Give the rocket more propellant
-                             rocket.propMass = rocket.propMass + cow.propAmt;
+           
+            if cow.State ~= "off"
+                %Scroll the cow. We move it by the change in position in
+                %meters. It does not move vertically.
+                cow.Location = cow.Location + [1, 0] .* delta_pos * Const.pixelsPerMeter;
+                %fprintf("cow location %i, %i", cow.Location(1), cow.Location(2));
 
-                             %Make sure the rocket doesn't exceed its maximum
-                             %propellant mass
-                             if rocket.propMass > rocket.maxPropMass
-                                 rocket.propMass = rocket.maxPropMass;
-                             end
+                
+                %Check that the cow is not way off screen
+                if cow.Location(1) < -Const.cowKillMargin
+                    cow.State = 'off';
+                elseif cow.Location(1) > Const.windowSize(1) + Const.cowKillMargin
+                    cow.State = 'off';
+                    %Removed kill for above and below screen
+                elseif cow.Location(2) > Const.windowSize(2) + Const.cowKillMargin
+                    %cow.State = 'off';
+                elseif cow.Location(2) < -Const.cowKillMargin
+                    %cow.State = 'off';
+                end
 
-                             cow.xToNextCow = randi(Const.cowRandVals); %Reset the counter for next cow spawn
-                             cow.State = 'off'; %Disable the cow
-                        end
+                %Check the cow's collisions in case it hits the rocket.
+                [collide, target] = SpriteKit.Physics.hasCollision(cow);
+                if collide %If it has collided with another Sprite
+                    switch target.ID %What Sprite it has collided with
+                        %Give the rocket propellant if it hits the cow
+                        case 'rocket'
+                            %If the cow is actually a tractor, crash the
+                            %rocket.
+                            if cow.State == "tractor"
+                                rocket.gameState = "crash";
+
+                                %Only give propellant if the cow is enabled (otherwise,
+                                %it's a 1x1 transparent png and its position is irrelevant
+                            elseif cow.State ~= "off"
+                                %Give the rocket more propellant
+                                rocket.propMass = rocket.propMass + cow.propAmt;
+
+                                %Make sure the rocket doesn't exceed its maximum
+                                %propellant mass
+                                if rocket.propMass > rocket.maxPropMass
+                                    rocket.propMass = rocket.maxPropMass;
+                                end
+
+                                cow.xToNextCow = randi(Const.cowRandVals); %Reset the counter for next cow spawn
+                                cow.State = 'off'; %Disable the cow
+                            end
+                    end
                 end
             end
     case 'crash' %Rocket crashed/game over

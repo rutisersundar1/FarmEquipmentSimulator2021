@@ -8,7 +8,7 @@ classdef ExhaustMgr < handle
     end
 
     methods
-        %Constructor
+        %% Constructor
         %Creates an ExhaustMgr object and initializes its particle list
         function obj = ExhaustMgr(rocket)
             %Creates an empty 0x0 array of SpriteKit.Sprites that will be
@@ -43,7 +43,8 @@ classdef ExhaustMgr < handle
 
         end
 
-        %Disables all managed particles.
+        %% killAllParticles
+        %disables all managed particles.
         function killAllParticles(obj)
             %Iterate through the list of particles and disable all.
             for currentParticle = obj.particleList
@@ -51,7 +52,8 @@ classdef ExhaustMgr < handle
             end
         end
 
-        %Spawns a particle if possible.
+        %% spawnParticle 
+        %spawns a particle if possible.
         %position is the position to be spawned at, as [x,y]
         %velocity is [x,y] velocity in pixels per frame to be spawned with.
         function spawnParticle(obj, position, velocity)
@@ -92,7 +94,9 @@ classdef ExhaustMgr < handle
             obj.particleSpawnTimer = Const.particleSpawnTime;
         end
 
-        %Despawns the given particle. Note that particle should be a
+        %% despawnParticle 
+        %despawns the given particle.
+        %Note that particle should be a
         %particle Sprite object, not a particle index.
         function despawnParticle(~, particle)
             particle.State = 'off';
@@ -102,6 +106,8 @@ classdef ExhaustMgr < handle
             particle.Location = [0,0];
         end
         
+        %% spawnParticleFromEngine 
+        %spawns a new particle from the rocket's engine
         function spawnParticleFromEngine(obj)
             if obj.rocket.throttle >= Const.throttle0cutoff
                 %These are easier to refer to
@@ -144,14 +150,17 @@ classdef ExhaustMgr < handle
             end
         end
 
+        %% updateParticles
         %Scrolls all particles assigned to the manager and updates them.
         %Takes [x,y] particle scroll distance.
         %Spawns new particles if appropriate.
         function updateParticles(obj, particleScrollDist)
-            %% Scroll particles
+            %Scroll particles
             %Move every particle in this manager's list by the distance
             %specified
-            for currentParticle = obj.particleList                
+            for currentParticle = obj.particleList   
+                %Only update these if the particle is actually enabled.
+                if currentParticle.State ~= "off"
                 %Move each particle according to its velocity.
                 newLocation = currentParticle.Location...
                         + (currentParticle.velocity * Const.pixelsPerMeter...
@@ -173,7 +182,9 @@ classdef ExhaustMgr < handle
                     %interesting
                     currentParticle.velocity = currentParticle.velocity...
                         .* Const.particleGroundDrag;
-                    currentParticle.State = 'dirt'; %Change to dirt particle
+                    if currentParticle.State ~= "dirt"
+                        currentParticle.State = 'dirt'; %Change to dirt particle
+                    end
                 end
 
                 currentParticle.Location = newLocation;
@@ -186,7 +197,7 @@ classdef ExhaustMgr < handle
 
                 currentParticle.Scale = currentParticle.Scale + Const.particleScaleInc;
 
-                %% Despawn checks
+                %Despawn checks
                 %If the particle is scrolled off screen, disable it.
                 if (currentParticle.Location(1) <= 0 ||... %left
                     currentParticle.Location(1) >= Const.windowSize(1) ||... %right
@@ -203,10 +214,11 @@ classdef ExhaustMgr < handle
                 if currentParticle.age >= Const.particleMaxAge
                     despawnParticle(obj, currentParticle); %disable particle
                 end
+                end
             end
 
            if obj.rocket.gameState == "play" && obj.rocket.propMass > 0
-               %% Spawn new particles if needed
+               %Spawn new particles if needed
                obj.particleSpawnTimer = obj.particleSpawnTimer - 1;
                if obj.particleSpawnTimer <= 0
                    %try to spawn a particle from the engine
