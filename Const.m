@@ -116,6 +116,20 @@ classdef Const
         maxPropMass = 360000; %maximum propellant mass, kilograms
         frictionMultiplier = 0.99; %velocity is multiplied by this each frame to approximate friction
         frameTime = 1 / 60; %seconds
+
+        %Whether to use the W and S keys for incremental throttle.
+        %Gameplay is more fun without them! Also, MATLAB has issues
+        %handling multiple keypresses at once. Using the Z and X keys
+        %exclusively means that you have instant control of throttle,
+        %whereas W and S would drop inputs if you were also changing angle.
+        incThrottle = 0; 
+
+        %Whether to animate the flame. Uses the different throttle images
+        %as animation rather than for different throttle levels.
+        flameAnim = 1;
+
+        %Frames between switching flame images if flame anim is used.
+        flameAnimTime = 5; 
         
         %Throttle cutoffs: Below these values, the rocket will appear to
         %have a different size of flame (if it has propellant).

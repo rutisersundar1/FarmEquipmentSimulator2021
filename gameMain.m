@@ -127,6 +127,9 @@ rocket.throttleBuffer = 0;
 rocket.rotBuffer = 0;
 rocket.specialBuffer = 0;
 
+%Timer for flame animation if used.
+flameAnimTimer = 0;
+
 %% Create cow Sprite object
 cow = SpriteKit.Sprite('cow');
 
@@ -320,6 +323,7 @@ function action
                     %Set the rocket's game state so that next frame the
                     %game will start
                     rocket.gameState = 'play';
+                    rocket.State = 'thrust0'; %don't be invisible
                 case 3 %q key, stop game
                     G.stop(); %stop gameplay execution
                     close(gcf); %Close the current figure (the game)
@@ -378,7 +382,8 @@ function action
             end
             
             %% Rocket Physics
-            rocket.State = 'thrust0'; %Show the rocket
+            %This isn't necessary
+            %rocket.State = 'thrust0'; %Show the rocket
             
             %Check for pausing the game.
             if rocket.specialBuffer == 1
@@ -421,9 +426,18 @@ function action
                 case 2 %x key, cut throttle
                     throttleVal = 0;
                 case 3 %w key, increase throttle
-                    throttleVal = rocket.throttle + Const.throttleInc * Const.frameTime;
+                    %Only if incremental throttle is enabled
+                    if Const.incThrottle
+                        throttleVal = rocket.throttle + Const.throttleInc * Const.frameTime;
+                    else 
+                        throttleVal = rocket.throttle;
+                    end
                 case 4 %s key, reduce throttle
-                    throttleVal = rocket.throttle - Const.throttleInc * Const.frameTime;
+                    if Const.incThrottle
+                        throttleVal = rocket.throttle - Const.throttleInc * Const.frameTime;
+                    else
+                        throttleVal = rocket.throttle;
+                    end
                 otherwise
                     throttleVal = rocket.throttle;
             end
@@ -533,19 +547,41 @@ function action
             end
             
             %% Scoring and Display
-            %Show the rocket throttle states: If the rocket throttle is
-            %between certain values, it shows a different size flame.
-            %Also if the rocket is out of propellant
-            if (rocket.throttle <= Const.throttle0cutoff) || rocket.propMass <= 1
-                rocket.State = 'thrust0'; %Engine off
-            elseif rocket.throttle <= Const.throttle1cutoff
-                rocket.State = 'thrust1'; %Small flame
-            elseif rocket.throttle <= Const.throttle2cutoff
-                rocket.State = 'thrust2'; %Medium flame
-            else 
-                rocket.State = 'thrust3'; %Large flame
+            if Const.flameAnim
+                flameAnimTimer = flameAnimTimer + 1;
+
+                if (rocket.throttle <= Const.throttle0cutoff) || rocket.propMass <= 1
+                    rocket.State = 'thrust0'; %engine off
+                elseif flameAnimTimer >= Const.flameAnimTime
+                    flameAnimTimer = 0;
+                    switch rocket.State
+                        case "thrust0"
+                            rocket.State = 'thrust3';
+                        case "thrust1"
+                            rocket.State = 'thrust2';
+                        case "thrust2"
+                            rocket.State = 'thrust3';
+                        case "thrust3"
+                            rocket.State = 'thrust1';
+                    end
+                end
+
             end
-                
+            if ~Const.flameAnim
+                %Show the rocket throttle states: If the rocket throttle is
+                %between certain values, it shows a different size flame.
+                %Also if the rocket is out of propellant
+                if (rocket.throttle <= Const.throttle0cutoff) || rocket.propMass <= 1
+                    rocket.State = 'thrust0'; %Engine off
+                elseif rocket.throttle <= Const.throttle1cutoff
+                    rocket.State = 'thrust1'; %Small flame
+                elseif rocket.throttle <= Const.throttle2cutoff
+                    rocket.State = 'thrust2'; %Medium flame
+                else 
+                    rocket.State = 'thrust3'; %Large flame
+                end
+            end
+
             %Update the particles
             exhaustMgr.updateParticles([delta_pos(1), 0]);
 
