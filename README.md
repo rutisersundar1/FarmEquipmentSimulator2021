@@ -12,7 +12,6 @@ You are a farmer flying your rocket to plow a field. To get more points, fly clo
 The game ends when you crash, so try to fly for as long as possible!
 
 Using the A and D keys, rotate your rocket left and right.
-Using the W and S keys, increase and decrease your throttle.
 The Z key sets full throttle and the X key will cut your throttle.
 
 Keep an eye on your fuel with the meter on the left. If your fuel runs out, you will fall and crash!
