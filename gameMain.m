@@ -204,6 +204,7 @@ fuelGaugeRect.LineWidth = Const.fuelGaugeLineWidth;
 fuelText = text(Const.fuelTextX, Const.fuelTextY, "Fuel");
 fuelText.FontSize = 14;
 
+%{
 %Create throttle gauge outline rectangle
 throtGaugeRect = rectangle('Position', Const.throtGaugeRectPos);
 throtGaugeRect.EdgeColor = Const.throtGaugeEdgeColor;
@@ -219,6 +220,7 @@ throtFillRect.LineWidth = Const.throtGaugeLineWidth;
 %Throttle gauge label text
 throtText = text(Const.throtTextX, Const.throtTextY, "Throttle");
 throtText.FontSize = 16;
+%}
 
 %Altitude text, initialized to blank. It will be updated when playing.
 altitudeText = text(Const.altTextX, Const.altTextY, "");
@@ -266,10 +268,12 @@ function action
             fuelFillRect.Visible = 'off';
             fuelText.Visible = 'off';
             
+            %{
             throtGaugeRect.Visible = 'off';
             throtFillRect.Visible = 'off';
             throtText.Visible = 'off';
-            
+            %}
+
             altitudeText.Visible = 'off';
             scoreText.Visible = 'off';
 
@@ -306,10 +310,12 @@ function action
             fuelFillRect.Visible = 'off';
             fuelText.Visible = 'off';
             
+            %{
             throtGaugeRect.Visible = 'off';
             throtFillRect.Visible = 'off';
             throtText.Visible = 'off';
-            
+            %}
+
             altitudeText.Visible = 'off';
             scoreText.Visible = 'off';
             
@@ -361,10 +367,12 @@ function action
                 fuelFillRect.Visible = 'on';
                 fuelText.Visible = 'on';
                 
+                %{
                 %Make throttle gauge visible
                 throtGaugeRect.Visible = 'on';
                 throtFillRect.Visible = 'on';
                 throtText.Visible = 'on';
+                %}
                 altitudeText.Visible = 'on'; %altimeter text
                 scoreText.Visible = 'on'; %Score text
             else
@@ -372,11 +380,11 @@ function action
                 fuelGaugeRect.Visible = 'off';
                 fuelFillRect.Visible = 'off';
                 fuelText.Visible = 'off';
-                
+                %{
                 throtGaugeRect.Visible = 'off';
                 throtFillRect.Visible = 'off';
                 throtText.Visible = 'off';
-                
+                %}
                 altitudeText.Visible = 'off';
                 scoreText.Visible = 'off';
             end
@@ -609,8 +617,8 @@ function action
                 
             %Update throttle gauge
             %width based on throttle value
-            throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
-            throtFillRect.Position(3) = throtFillWidth;
+            %throtFillWidth = Const.throtGaugeWidth * rocket.throttle;
+            %throtFillRect.Position(3) = throtFillWidth;
             
             %% Background
             %The scroll function requires a positive value. We store change
@@ -704,10 +712,12 @@ function action
         fuelFillRect.Visible = 'off';
         fuelText.Visible = 'off';
         
+        %{
         %Hide throttle gauge
         throtGaugeRect.Visible = 'off';
         throtFillRect.Visible = 'off';
         throtText.Visible = 'off';
+        %}
         
         altitudeText.Visible = 'off'; %Hide altitude text
         scoreText.Visible = 'on'; %Show score text
