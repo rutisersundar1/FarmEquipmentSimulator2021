@@ -7,6 +7,10 @@ MATLAB R2021b
 
 Welcome to Farm Equipment Simulator 2021!
 
+This game won 3rd place at the Fundamentals of Engineering I Software Design Project Showcase!
+One team from each ENGR 1181 section qualified for the showcase out of around 400 total teams.
+Congratulations to all the teams who worked hard to develop their Software Design Projects!
+
 Gameplay instructions:
 You are a farmer flying your rocket to plow a field. To get more points, fly closer to the ground or at a larger angle from vertical.
 The game ends when you crash, so try to fly for as long as possible!
