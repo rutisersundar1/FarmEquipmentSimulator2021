@@ -1,0 +1,175 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="4216519920" file="C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version\FarmEquipmentSimulator2021.prj" location="C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version" name="FarmEquipmentSimulator2021" preferred-package-location="C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version\FarmEquipmentSimulator2021\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>FarmEquipmentSimulator2021</param.appname>
+    <param.icon>${PROJECT_ROOT}\FarmEquipmentSimulator2021_resources\icon.ico</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}\FarmEquipmentSimulator2021_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\FarmEquipmentSimulator2021_resources\icon_32.png</file>
+      <file>${PROJECT_ROOT}\FarmEquipmentSimulator2021_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\FarmEquipmentSimulator2021_resources\icon_16.png</file>
+    </param.icons>
+    <param.version>1.0</param.version>
+    <param.authnamewatermark>Ranga RS, Adam Rike, Jonah Robles</param.authnamewatermark>
+    <param.email>rutisersundar.1@osu.edu</param.email>
+    <param.company>The Ohio State University</param.company>
+    <param.summary>A game about using a rocket to plow a field.</param.summary>
+    <param.description>This will download and install the MATLAB Runtime from the web (around 1 GiB). This may take a while, and requires agreeing to the MATLAB Runtime Terms of Service. This also installs a .exe version of Farm Equipment Simulator 2021, which can be run without a full MATLAB license. 
+For source code, instructions, and documentation, visit github.com/rutisersundar1/FarmEquipmentSimuator2021.
+This game was developed as a final project for ENGR 1181 at The Ohio State University. There are no plans for future updates or maintenance of this project.</param.description>
+    <param.screenshot>${PROJECT_ROOT}\titleScreen.png</param.screenshot>
+    <param.guid />
+    <param.installpath.string>\The Ohio State University\FarmEquipmentSimulator2021\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\FarmEquipmentSimulator2021</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>FES2021Installer_Web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments 
+ Description 
+ 	 This will download and install the MATLAB Runtime from the web (around 1 GiB). This may take a while, and requires agreeing to the MATLAB Runtime Terms of Service. This also installs a .exe version of Farm Equipment Simulator 2021, which can be run without a full MATLAB license. 
+For source code, instructions, and documentation, visit github.com/rutisersundar1/FarmEquipmentSimuator2021.
+This game was developed as a final project for ENGR 1181 at The Ohio State University. There are no plans for future updates or maintenance of this project.</param.help.text>
+    <unset>
+      <param.version />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\gameMain.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\background.png</file>
+      <file>${PROJECT_ROOT}\backgroundBlueScreen.png</file>
+      <file>${PROJECT_ROOT}\bufferKeys.m</file>
+      <file>${PROJECT_ROOT}\Const.m</file>
+      <file>${PROJECT_ROOT}\cow.png</file>
+      <file>${PROJECT_ROOT}\cowFly.png</file>
+      <file>${PROJECT_ROOT}\crashedTractor.png</file>
+      <file>${PROJECT_ROOT}\crashScreen.png</file>
+      <file>${PROJECT_ROOT}\dirt.png</file>
+      <file>${PROJECT_ROOT}\exhaust.png</file>
+      <file>${PROJECT_ROOT}\ExhaustMgr.m</file>
+      <file>${PROJECT_ROOT}\gameMain.m</file>
+      <file>${PROJECT_ROOT}\noneImg.png</file>
+      <file>${PROJECT_ROOT}\pauseScreen.png</file>
+      <file>${PROJECT_ROOT}\rocket3.png</file>
+      <file>${PROJECT_ROOT}\rocket3_crashed.png</file>
+      <file>${PROJECT_ROOT}\rocket3_high.png</file>
+      <file>${PROJECT_ROOT}\rocket3_low.png</file>
+      <file>${PROJECT_ROOT}\rocket3_mid.png</file>
+      <file>${PROJECT_ROOT}\spawnCow.m</file>
+      <file>${PROJECT_ROOT}\titleScreen.png</file>
+      <file>${PROJECT_ROOT}\tutorial.png</file>
+    </fileset.resources>
+    <fileset.package />
+    <fileset.depfun>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@ChildManager\addChild.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@ChildManager\ChildManager.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@ChildManager\removeChild.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@Graphic\Graphic.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@Graphic\updateGfxData.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@Layer\Layer.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@RadioMenuGroup\CallbackManager.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@RadioMenuGroup\RadioMenuGroup.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\cycleNext.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\cyclePrevious.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\initState.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\setNoneState.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\StateController.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+internal\@StateController\updateState.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+Physics\hasCollision.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+Utils\@Torus\private\MsgCatalog.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+Utils\@Torus\subsasgn.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+Utils\@Torus\subsref.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\+Utils\@Torus\Torus.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Background\Background.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Background\refreshCData.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Background\scroll.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\addBorders.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\addChild.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\Game.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\instance.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\MenuCallbackManager.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\play.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\removeChild.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\repaintFPSText.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\safePosition.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Game\stop.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Sprite\initState.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Sprite\Sprite.m</file>
+      <file>C:\Users\ranga\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\SpriteKit Framework\+SpriteKit\@Sprite\updateState.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_testing" name="FarmEquipmentSimulator2021.exe" optional="false">C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version\FarmEquipmentSimulator2021\for_testing\FarmEquipmentSimulator2021.exe</file>
+      <file location="${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_testing" name="readme.txt" optional="true">C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version\FarmEquipmentSimulator2021\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\FarmEquipmentSimulator2021\for_testing" name="splash.png" optional="false">C:\Users\ranga\Documents\GitHub\FarmEquipmentSimulator2021\For Compiled Version\FarmEquipmentSimulator2021\for_testing\splash.png</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2022a</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
